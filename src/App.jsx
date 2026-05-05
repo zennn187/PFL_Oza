@@ -22,6 +22,7 @@ const Register = React.lazy(() => import("./pages/auth/Register"))
 const Forgot = React.lazy(() => import("./pages/auth/Forgot"))
 const AuthLayout = React.lazy(() => import("./layouts/AuthLayout"))
 const MainLayout = React.lazy(() => import("./layouts/MainLayout"))
+const UserProfile = React.lazy(() => import("./pages/UserProfile"))
 
 
 function App() {
@@ -30,20 +31,21 @@ function App() {
   return (
     <Suspense fallback={<Loading />}>
 
-      <Route>
+      <Routes>
         <Route element={<MainLayout />}>
-          <Route path="*" element={<NotFound />} />
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="*" element={<NotFound />} />
+
         </Route>
 
-        <Routes element={<AuthLayout />}>
+        <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forgot />} />
-        </Routes>
-      </Route>
+        </Route>
+      </Routes>
     </Suspense>
   );
 }

@@ -37,8 +37,8 @@ export default function Header() {
 
                 <div className="flex items-center space-x-3 cursor-pointer group">
                     <div className="text-right">
-                        <p className="text-sm font-semibold text-gray-800 group-hover:text-orange-500 transition-colors">Samantha</p>
-                        <p className="text-xs text-gray-500 font-medium">Main Admin</p>
+                        <p className="text-sm font-semibold text-gray-800 group-hover:text-orange-500 transition-colors">Oza Okta</p>
+                        <p className="text-xs text-gray-500 font-medium">Admin</p>
                     </div>
                     <img
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIe3VuOA6oMIqC9QIR6mkvfG9stciQXtOZ4A&s"

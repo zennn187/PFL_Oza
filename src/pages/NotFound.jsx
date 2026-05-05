@@ -29,7 +29,8 @@ export default function NotFound() {
                 Page not Found
             </h2>
             <p className="text-gray-500 max-w-md mb-8 text-sm leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisis viverra laoreet lorem diam sed egestas tincidunt dolor.
+                Permintaan tidak dapat diproses oleh server karena format yang tidak valid. Silakan periksa kembali data Anda.
+
             </p>
 
             <Link 

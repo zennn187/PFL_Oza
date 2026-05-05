@@ -1,68 +1,113 @@
 import { Link } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 export default function Register() {
     return (
-        <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Sign up</h2>
-            <p className="text-gray-500 mb-8 text-sm font-medium">Create an account to manage your restaurant.</p>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFFBF7] p-6 text-center">
+        
 
-            <form>
-                <div className="mb-5">
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                    >
-                        Email Address
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all text-sm placeholder-gray-400"
-                        placeholder="you@example.com"
-                    />
+            {/* Heading Section */}
+            <h2 className="text-[40px] font-serif font-bold text-[#0D1B3E] mb-1">Sign Up</h2>
+            <p className="text-[#9CA3AF] mb-10 text-lg">Create your Hope UI account</p>
+
+            <form className="w-full max-w-2xl text-left">
+                {/* Grid Layout untuk First Name & Last Name */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">First Name</label>
+                        <input
+                            type="text"
+                            className="w-full px-5 py-3 bg-white border border-[#FDBA74] rounded-full focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Last Name</label>
+                        <input
+                            type="text"
+                            className="w-full px-5 py-3 bg-white border border-[#FDBA74] rounded-full focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        />
+                    </div>
                 </div>
 
-                <div className="mb-5">
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                    >
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all text-sm placeholder-gray-400"
-                        placeholder="********"
-                    />
+                {/* Grid Layout untuk Email & Phone No. */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Email</label>
+                        <input
+                            type="email"
+                            className="w-full px-5 py-3 bg-white border border-[#FDBA74] rounded-full focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Phone No.</label>
+                        <input
+                            type="text"
+                            className="w-full px-5 py-3 bg-white border border-[#FDBA74] rounded-full focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        />
+                    </div>
                 </div>
 
-                <div className="mb-8">
-                    <label
-                        htmlFor="confirmPassword"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                    >
-                        Confirm Password
-                    </label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all text-sm placeholder-gray-400"
-                        placeholder="********"
-                    />
+                {/* Grid Layout untuk Password & Confirm Password */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                    <div>
+                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Password</label>
+                        <input
+                            type="password"
+                            className="w-full px-5 py-3 bg-white border border-[#FDBA74] rounded-full focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Confirm password</label>
+                        <input
+                            type="password"
+                            className="w-full px-5 py-3 bg-white border border-[#FDBA74] rounded-full focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        />
+                    </div>
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 shadow-md shadow-orange-500/30"
-                >
-                    Sign up
-                </button>
+                {/* Terms of Use */}
+                <div className="flex justify-center items-center mb-8">
+                    <label className="flex items-center text-sm text-[#9CA3AF] cursor-pointer">
+                        <input type="checkbox" className="w-4 h-4 mr-2 border-gray-300 rounded" />
+                        I agree with the terms of use
+                    </label>
+                </div>
 
-                <p className="text-center mt-6 text-sm text-gray-600 font-medium">
-                    Already have an account? <Link to="/login" className="text-orange-500 hover:text-orange-600">Sign in</Link>
-                </p>
+                {/* Submit Button */}
+                <div className="flex justify-center">
+                    <button
+                        type="submit"
+                        className="w-full max-w-xs bg-[#F97316] hover:bg-[#EA580C] text-white font-semibold py-3 px-8 rounded-full transition duration-300 text-lg shadow-lg shadow-orange-200"
+                    >
+                        Sign up
+                    </button>
+                </div>
+
+                {/* Social Sign In Section */}
+                <div className="mt-10 text-center">
+                    <p className="text-[#0D1B3E] font-medium mb-6 text-sm md:text-base">or sign up with other accounts?</p>
+                    <div className="flex justify-center gap-4 mb-10">
+                        <SocialIcon icon={<FcGoogle size={22} />} />
+                        <SocialIcon icon={<FaFacebook size={22} className="text-[#3b5998]" />} />
+                        <SocialIcon icon={<FaInstagram size={22} className="text-[#E1306C]" />} />
+                        <SocialIcon icon={<FaLinkedin size={22} className="text-[#0077b5]" />} />
+                    </div>
+                    
+                    <p className="text-[#0D1B3E] font-medium text-sm md:text-base">
+                        Already have an Account <Link to="/login" className="text-[#F97316] hover:underline font-semibold">Sign in</Link>
+                    </p>
+                </div>
             </form>
+        </div>
+    );
+}
+
+// Komponen Ikon Sosial
+function SocialIcon({ icon }) {
+    return (
+        <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm border border-gray-100 cursor-pointer hover:scale-110 transition-transform">
+            {icon}
         </div>
     );
 }
