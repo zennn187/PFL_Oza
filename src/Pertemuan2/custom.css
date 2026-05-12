@@ -1,0 +1,139 @@
+/* Import font 'Plus Jakarta Sans' untuk kesan Tech & Professional */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --brand-indigo: #4f46e5;    /* Warna aksen tunggal yang elegan */
+    --text-main: #0f172a;       /* Hampir hitam, tapi lebih lembut di mata */
+    --text-muted: #64748b;      /* Abu-abu untuk teks sekunder */
+    --bg-page: #f8fafc;         /* Abu-abu sangat muda yang bersih */
+    --card-bg: #ffffff;
+    --border-light: #f1f5f9;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    margin: 0;
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Container utama agar konten tidak terlalu lebar dan sejajar di tengah */
+.main-wrapper {
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Header Section: Jauh lebih bersih */
+.header-section {
+    margin-bottom: 40px;
+    padding-left: 10px; /* Menyelaraskan dengan konten kartu */
+}
+
+h1.page-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    letter-spacing: -1.5px;
+    display: flex;
+    align-items: center;
+}
+
+h1.page-title::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 30px;
+    background-color: var(--brand-indigo);
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+p.subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Styling Kartu-Kartu: Konsisten & Rapi */
+.card-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Spasi antar kartu yang konsisten */
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 30px 35px; /* Spasi dalam yang lega agar mata tidak lelah */
+    border-radius: 20px; /* Sudut tumpul yang modern */
+    border: 1px solid var(--border-light);
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.02),
+        0 8px 16px -4px rgba(0, 0, 0, 0.04); /* Bayangan yang sangat halus */
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06);
+}
+
+/* Kartu Pertama: Salam dari Binjai */
+.salam-binjai {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--brand-indigo);
+    text-align: center;
+}
+
+/* Kartu Kedua: Peribahasa */
+.proverb-card p {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin: 0 0 12px 0;
+}
+
+.proverb-card p:last-child {
+    margin-bottom: 0;
+    color: var(--text-main);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Kartu Ketiga: Biodata */
+.bio-card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: var(--text-main);
+}
+
+.bio-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bio-item {
+    display: flex;
+    font-size: 14px;
+}
+
+.bio-label {
+    width: 80px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.bio-value {
+    color: var(--text-main);
+    font-weight: 600;
+}

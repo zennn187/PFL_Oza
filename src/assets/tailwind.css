@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'Barlow';
+    src: url('/fonts/Barlow-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/poppins-regular.ttf');
+}
+
+@theme {
+    --font-barlow: "Barlow", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+    
+    --color-latar: #f9fafb; /* gray-50 */
+    --color-teks: #1f2937; /* gray-800 */
+    --color-teks-samping: #6b7280; /* gray-500 */
+    --color-garis: #f3f4f6; /* gray-100 */
+    
+    /* Tema Aprycot Lite */
+    --color-utama: #f97316; /* orange-500 */
+    --color-utama-hover: #ea580c; /* orange-600 */
+    --color-merah: #ef4444; 
+    --color-biru: #3b82f6;
+    --color-hijau: #10b981; 
+}
+
+body {
+    @apply font-barlow text-gray-800 bg-gray-50;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==================== ANIMATIONS UTILITIES ==================== */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+
+/* ==================== CUSTOM UTILITIES ==================== */
+
+/* Shimmer effect untuk loading */
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+}
+
+/* Custom scrollbar - Tema Oranye */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #fdba74; /* orange-300 */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-utama); /* orange-500 */
+}
+
+/* Focus ring bersih */
+input:focus, select:focus, textarea:focus, button:focus {
+    outline: none;
+}
+
+/* Gradient text - Tema Oranye */
+.gradient-text {
+    background: linear-gradient(135deg, var(--color-utama), #fb923c); /* orange-500 to orange-400 */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ==================== PRINT STYLES ==================== */
+
+@media print {
+    .no-print {
+        display: none;
+    }
+    body {
+        background: white;
+    }
+}
