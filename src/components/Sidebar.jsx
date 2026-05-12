@@ -45,6 +45,10 @@ export default function Sidebar() {
                         <FaStore className="text-lg mr-4" />
                         <span className="text-sm font-bold">Profil Katering</span>
                     </NavLink>
+                    <NavLink to="/products" className={navLinkClass}>
+                        <MdFastfood className="text-xl mr-4" />
+                        <span className="text-sm font-bold">Products</span>
+                    </NavLink>
                 </div>
 
                 {/* --- OPERATIONAL (Dropdown) --- */}
