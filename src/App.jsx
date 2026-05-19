@@ -25,6 +25,7 @@ const MainLayout = React.lazy(() => import("./layouts/MainLayout"))
 const UserProfile = React.lazy(() => import("./pages/UserProfile"))
 const Products = React.lazy(() => import("./pages/Products"))
 const ProductsDetail = React.lazy(() => import("./pages/ProductsDetail"))
+const Components = React.lazy(() => import("./pages/Components"))
 
 
 function App() {
@@ -38,9 +39,10 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/customers" element={<Customers />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductsDetail />} />
+          <Route path="/components" element={<Components />} />
+          <Route path="*" element={<NotFound />} />
 
         </Route>
 
