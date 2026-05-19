@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { MdSpaceDashboard, MdKeyboardArrowRight, MdKeyboardArrowDown, MdFastfood } from "react-icons/md";
+import { MdSpaceDashboard, MdKeyboardArrowRight, MdKeyboardArrowDown, MdFastfood, MdExtension } from "react-icons/md";
 import { FaUsers, FaUtensils, FaClipboardList, FaTruck, FaChartBar, FaStar, FaStore } from "react-icons/fa";
 
 export default function Sidebar() {
@@ -48,6 +48,10 @@ export default function Sidebar() {
                     <NavLink to="/products" className={navLinkClass}>
                         <MdFastfood className="text-xl mr-4" />
                         <span className="text-sm font-bold">Products</span>
+                    </NavLink>
+                    <NavLink to="/components" className={navLinkClass}>
+                        <MdExtension className="text-xl mr-4" />
+                        <span className="text-sm font-bold">Components</span>
                     </NavLink>
                 </div>
 
