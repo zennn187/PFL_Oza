@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { MdSpaceDashboard, MdKeyboardArrowRight, MdKeyboardArrowDown, MdFastfood, MdExtension } from "react-icons/md";
-import { FaUsers, FaUtensils, FaClipboardList, FaTruck, FaChartBar, FaStar, FaStore } from "react-icons/fa";
+import { FaUsers, FaUtensils, FaClipboardList, FaTruck, FaChartBar, FaStar, FaStore, FaTools } from "react-icons/fa";
 
 export default function Sidebar() {
-    const [openMenus, setOpenMenus] = useState({ Operational: true }); // Default Operational terbuka
+    const [openMenus, setOpenMenus] = useState({ Operational: true });
 
     const toggleMenu = (name) => {
         setOpenMenus(prev => ({ ...prev, [name]: !prev[name] }));
     };
 
-    // Styling Class Helpers
     const categoryTitle = "text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 px-4";
     
     const navLinkClass = ({ isActive }) =>
@@ -23,7 +22,6 @@ export default function Sidebar() {
 
     return (
         <div className="flex min-h-screen w-[260px] flex-col bg-white border-r border-gray-100 font-sans sticky top-0 h-screen">
-            {/* Logo Section - Aprycot Style */}
             <div className="p-6 mb-4 flex justify-center border-b border-gray-50">
                 <div className="relative inline-block">
                     <h1 className="text-2xl font-serif font-bold text-[#0D1B3E]">
@@ -34,13 +32,13 @@ export default function Sidebar() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-3 no-scrollbar">
-                {/* --- MAIN MENU --- */}
                 <div className="mt-4">
                     <p className={categoryTitle}>Main Menu</p>
                     <NavLink to="/dashboard" className={navLinkClass}>
                         <MdSpaceDashboard className="text-xl mr-4" />
                         <span className="text-sm font-bold">Dashboard</span>
                     </NavLink>
+                    
                     <NavLink to="/toko" className={navLinkClass}>
                         <FaStore className="text-lg mr-4" />
                         <span className="text-sm font-bold">Profil Katering</span>
@@ -53,9 +51,12 @@ export default function Sidebar() {
                         <MdExtension className="text-xl mr-4" />
                         <span className="text-sm font-bold">Components</span>
                     </NavLink>
+                    <NavLink to="/fitur-oza" className={navLinkClass}>
+                        <FaTools className="text-lg mr-4" />
+                        <span className="text-sm font-bold">Fitur Oza</span>
+                    </NavLink>
                 </div>
 
-                {/* --- OPERATIONAL (Dropdown) --- */}
                 <div className="mt-6">
                     <p className={categoryTitle}>Operational</p>
                     
@@ -99,7 +100,6 @@ export default function Sidebar() {
                     </NavLink>
                 </div>
 
-                {/* --- CUSTOMER & FINANCE --- */}
                 <div className="mt-6 pb-10">
                     <p className={categoryTitle}>Reports & Data</p>
                     <NavLink to="/pelanggan" className={navLinkClass}>

@@ -63,7 +63,7 @@ export default function Components() {
         </p>
       </div>
 
-      <section className="space-y-4">
+      <section className="space-y-4">   
         <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
           1. Basic Components
         </h2>
