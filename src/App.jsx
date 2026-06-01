@@ -5,6 +5,7 @@ import "./assets/tailwind.css";
 import { Route, Routes } from "react-router-dom";
 import Loading from "./components/Loading";
 import FiturOza from "./pages/FiturOza";
+import { Toaster } from "@/components/ui/sonner";
 // import MainLayout from "./layouts/MainLayout";
 // import AuthLayout from "./layouts/AuthLayout";
 // import Orders from "./pages/Orders";
@@ -27,6 +28,7 @@ const UserProfile = React.lazy(() => import("./pages/UserProfile"));
 const Products = React.lazy(() => import("./pages/Products"));
 const ProductsDetail = React.lazy(() => import("./pages/ProductsDetail"));
 const Components = React.lazy(() => import("./pages/Components"));
+const KomponenShadCN = React.lazy(() => import("./pages/KomponenShadCN"));
 
 function App() {
   const [count, setCount] = useState(0);
@@ -42,6 +44,7 @@ function App() {
           <Route path="/products/:id" element={<ProductsDetail />} />
           <Route path="/components" element={<Components />} />
           <Route path="/fitur-oza" element={<FiturOza />} />
+          <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 
@@ -51,6 +54,7 @@ function App() {
           <Route path="/forgot" element={<Forgot />} />
         </Route>
       </Routes>
+      <Toaster />
     </Suspense>
   );
 }

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { MdSpaceDashboard, MdKeyboardArrowRight, MdKeyboardArrowDown, MdFastfood, MdExtension } from "react-icons/md";
 import { FaUsers, FaUtensils, FaClipboardList, FaTruck, FaChartBar, FaStar, FaStore, FaTools } from "react-icons/fa";
 
 export default function Sidebar() {
     const [openMenus, setOpenMenus] = useState({ Operational: true });
+    const location = useLocation();
 
     const toggleMenu = (name) => {
         setOpenMenus(prev => ({ ...prev, [name]: !prev[name] }));
@@ -19,6 +20,8 @@ export default function Sidebar() {
     const subLinkClass = ({ isActive }) =>
         `flex items-center pl-14 py-2.5 rounded-full transition-all duration-200 mb-1
         ${isActive ? "bg-[#F97316] text-white shadow-sm" : "text-gray-500 hover:text-[#F97316]"}`;
+
+    const isOperationalActive = ["/menu-list", "/kategori-menu", "/stok"].includes(location.pathname);
 
     return (
         <div className="flex min-h-screen w-[260px] flex-col bg-white border-r border-gray-100 font-sans sticky top-0 h-screen">
@@ -55,16 +58,20 @@ export default function Sidebar() {
                         <FaTools className="text-lg mr-4" />
                         <span className="text-sm font-bold">Fitur Oza</span>
                     </NavLink>
+                    <NavLink to="/komponen-shadcn" className={navLinkClass}>
+                        <MdExtension className="text-xl mr-4" />
+                        <span className="text-sm font-bold">Komponen ShadCN</span>
+                    </NavLink>
                 </div>
 
                 <div className="mt-6">
                     <p className={categoryTitle}>Operational</p>
                     
                     <div>
-                        <button 
+                        <button     
                             onClick={() => toggleMenu("Operational")}
                             className={`w-full flex items-center px-4 py-3 rounded-full transition-all mb-1
-                            ${openMenus["Operational"] ? "bg-[#F97316] text-white shadow-lg" : "text-gray-400"}`}
+                            ${isOperationalActive ? "bg-[#F97316] text-white shadow-lg" : "text-gray-400 hover:text-[#F97316]"}`}
                         >
                             <FaUtensils className="text-lg mr-4" />
                             <span className="flex-1 text-left text-sm font-bold">Manajemen Menu</span>
@@ -74,15 +81,15 @@ export default function Sidebar() {
                         {openMenus["Operational"] && (
                             <div className="mt-1 space-y-1">
                                 <NavLink to="/menu-list" className={subLinkClass}>
-                                    <div className={`w-1.5 h-1.5 rounded-full mr-3 ${openMenus["Operational"] ? "bg-white" : "bg-gray-300"}`}></div>
+                                    <div className="w-1.5 h-1.5 rounded-full mr-3 bg-current"></div>
                                     <span className="text-sm">Daftar Menu</span>
                                 </NavLink>
-                                <NavLink to="/kategori-menu" className={({ isActive }) => `flex items-center pl-14 py-2.5 text-gray-400 hover:text-[#F97316] transition-all`}>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-gray-300 mr-3"></div>
+                                <NavLink to="/kategori-menu" className={subLinkClass}>
+                                    <div className="w-1.5 h-1.5 rounded-full mr-3 bg-current"></div>
                                     <span className="text-sm">Kategori Produk</span>
                                 </NavLink>
-                                <NavLink to="/stok" className={({ isActive }) => `flex items-center pl-14 py-2.5 text-gray-400 hover:text-[#F97316] transition-all`}>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-gray-300 mr-3"></div>
+                                <NavLink to="/stok" className={subLinkClass}>
+                                    <div className="w-1.5 h-1.5 rounded-full mr-3 bg-current"></div>
                                     <span className="text-sm">Stok Bahan</span>
                                 </NavLink>
                             </div>
