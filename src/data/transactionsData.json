@@ -1,0 +1,272 @@
+[
+  {
+    "id_transaksi": "TRX-20260001",
+    "nama_pelanggan": "Rina Marlina",
+    "frekuensi_pembelian": "14 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Sate Ayam (1x), Coffee Break Package / Pax (3x)",
+    "total_transaksi": 99000,
+    "metode_pembayaran": "Transfer Bank Mandiri",
+    "tanggal_terakhir": "20/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260002",
+    "nama_pelanggan": "Aris Munandar",
+    "frekuensi_pembelian": "3 Kali",
+    "produk_dibeli": "Nasi Kotak Ayam Goreng Kremes (100x), Nasi Kotak Bento Anak (100x), Nasi Tumpeng Sedang (10 Porsi) (1x)",
+    "total_transaksi": 6300000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "15/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260003",
+    "nama_pelanggan": "Andi Wijaya",
+    "frekuensi_pembelian": "15 Kali",
+    "produk_dibeli": "Nasi Tumpeng Sedang (10 Porsi) (1x), Coffee Break Package / Pax (3x)",
+    "total_transaksi": 375000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "29/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260004",
+    "nama_pelanggan": "Ahmad Fauzi",
+    "frekuensi_pembelian": "1 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Sate Ayam (1x), Paket Aqiqah Lengkap (71x), Paket Prasmanan Pernikahan (A) (51x)",
+    "total_transaksi": 132159000,
+    "metode_pembayaran": "Transfer Bank BCA",
+    "tanggal_terakhir": "12/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260005",
+    "nama_pelanggan": "Joko Purwanto",
+    "frekuensi_pembelian": "9 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Sate Ayam (3x), Nasi Kotak Ayam Goreng Kremes (25x), Paket Prasmanan Pernikahan (A) (30x)",
+    "total_transaksi": 3422000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "27/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260006",
+    "nama_pelanggan": "Rian Hidayat",
+    "frekuensi_pembelian": "12 Kali",
+    "produk_dibeli": "Nasi Liwet Sunda Tampah (5 Porsi) (2x), Snack Box Acara Kantor (3 Kue + Air) (15x), Nasi Kotak Bento Anak (100x)",
+    "total_transaksi": 3375000,
+    "metode_pembayaran": "Transfer Bank BCA",
+    "tanggal_terakhir": "04/05/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260007",
+    "nama_pelanggan": "Lestari",
+    "frekuensi_pembelian": "3 Kali",
+    "produk_dibeli": "Nasi Kotak Ayam Goreng Kremes (20x), Paket Menu Gubukan - Sate Ayam (4x), Nasi Liwet Sunda Tampah (5 Porsi) (1x)",
+    "total_transaksi": 911000,
+    "metode_pembayaran": "Tunai / COD",
+    "tanggal_terakhir": "17/05/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260008",
+    "nama_pelanggan": "Aris Munandar",
+    "frekuensi_pembelian": "4 Kali",
+    "produk_dibeli": "Paket Prasmanan Pernikahan (A) (94x), Nasi Kotak Rendang Padang (100x)",
+    "total_transaksi": 11790000,
+    "metode_pembayaran": "Tunai / COD",
+    "tanggal_terakhir": "09/01/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260009",
+    "nama_pelanggan": "Budi Santoso",
+    "frekuensi_pembelian": "11 Kali",
+    "produk_dibeli": "Nasi Tumpeng Sedang (10 Porsi) (1x), Paket Menu Gubukan - Bakso Malang (2x), Nasi Liwet Sunda Tampah (5 Porsi) (3x)",
+    "total_transaksi": 869000,
+    "metode_pembayaran": "Transfer Bank BCA",
+    "tanggal_terakhir": "18/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260010",
+    "nama_pelanggan": "Mega Utami",
+    "frekuensi_pembelian": "10 Kali",
+    "produk_dibeli": "Paket Prasmanan Pernikahan (A) (80x), Paket Menu Gubukan - Sate Ayam (1x), Nasi Tumpeng Sedang (10 Porsi) (4x)",
+    "total_transaksi": 8024000,
+    "metode_pembayaran": "Tunai / COD",
+    "tanggal_terakhir": "25/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260011",
+    "nama_pelanggan": "Lestari",
+    "frekuensi_pembelian": "2 Kali",
+    "produk_dibeli": "Nasi Kotak Ayam Goreng Kremes (20x), Nasi Liwet Sunda Tampah (5 Porsi) (2x)",
+    "total_transaksi": 990000,
+    "metode_pembayaran": "QRIS",
+    "tanggal_terakhir": "10/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260012",
+    "nama_pelanggan": "Slamet Riyadi",
+    "frekuensi_pembelian": "3 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Sate Ayam (3x)",
+    "total_transaksi": 72000,
+    "metode_pembayaran": "Transfer Bank BCA",
+    "tanggal_terakhir": "21/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260013",
+    "nama_pelanggan": "Dewi Lestari",
+    "frekuensi_pembelian": "10 Kali",
+    "produk_dibeli": "Nasi Kotak Ayam Goreng Kremes (20x), Paket Aqiqah Lengkap (26x), Nasi Tumpeng Sedang (10 Porsi) (5x)",
+    "total_transaksi": 48940000,
+    "metode_pembayaran": "Transfer Bank Mandiri",
+    "tanggal_terakhir": "08/05/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260014",
+    "nama_pelanggan": "Eka Yulianti",
+    "frekuensi_pembelian": "3 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Bakso Malang (2x), Nasi Kotak Bento Anak (30x), Paket Prasmanan Pernikahan (B) (39x)",
+    "total_transaksi": 5174000,
+    "metode_pembayaran": "Transfer Bank Mandiri",
+    "tanggal_terakhir": "28/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260015",
+    "nama_pelanggan": "Heri Setiawan",
+    "frekuensi_pembelian": "9 Kali",
+    "produk_dibeli": "Nasi Liwet Sunda Tampah (5 Porsi) (1x)",
+    "total_transaksi": 175000,
+    "metode_pembayaran": "Transfer Bank BCA",
+    "tanggal_terakhir": "09/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260016",
+    "nama_pelanggan": "Rian Hidayat",
+    "frekuensi_pembelian": "14 Kali",
+    "produk_dibeli": "Nasi Kotak Bento Anak (50x)",
+    "total_transaksi": 1400000,
+    "metode_pembayaran": "E-Wallet (OVO/Dana)",
+    "tanggal_terakhir": "25/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260017",
+    "nama_pelanggan": "Sari Dewi",
+    "frekuensi_pembelian": "1 Kali",
+    "produk_dibeli": "Nasi Kotak Rendang Padang (10x), Paket Prasmanan Pernikahan (B) (87x), Nasi Kotak Ayam Bakar Premium (25x)",
+    "total_transaksi": 10825000,
+    "metode_pembayaran": "QRIS",
+    "tanggal_terakhir": "01/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260018",
+    "nama_pelanggan": "Oza Okta",
+    "frekuensi_pembelian": "8 Kali",
+    "produk_dibeli": "Nasi Tumpeng Besar (20 Porsi) (1x), Paket Aqiqah Lengkap (32x), Nasi Kotak Bento Anak (15x)",
+    "total_transaksi": 58520000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "09/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260019",
+    "nama_pelanggan": "Putri Rahayu",
+    "frekuensi_pembelian": "2 Kali",
+    "produk_dibeli": "Nasi Kotak Ayam Bakar Premium (20x), Nasi Tumpeng Sedang (10 Porsi) (5x)",
+    "total_transaksi": 2200000,
+    "metode_pembayaran": "E-Wallet (OVO/Dana)",
+    "tanggal_terakhir": "01/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260020",
+    "nama_pelanggan": "Lestari",
+    "frekuensi_pembelian": "11 Kali",
+    "produk_dibeli": "Nasi Tumpeng Sedang (10 Porsi) (3x), Nasi Liwet Sunda Tampah (5 Porsi) (4x)",
+    "total_transaksi": 1600000,
+    "metode_pembayaran": "Transfer Bank Mandiri",
+    "tanggal_terakhir": "05/05/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260021",
+    "nama_pelanggan": "Siti Aminah",
+    "frekuensi_pembelian": "12 Kali",
+    "produk_dibeli": "Snack Box Acara Kantor (3 Kue + Air) (30x)",
+    "total_transaksi": 450000,
+    "metode_pembayaran": "QRIS",
+    "tanggal_terakhir": "16/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260022",
+    "nama_pelanggan": "Ika Pertiwi",
+    "frekuensi_pembelian": "2 Kali",
+    "produk_dibeli": "Coffee Break Package / Pax (2x), Paket Menu Gubukan - Sate Ayam (2x), Snack Box Acara Kantor (3 Kue + Air) (30x)",
+    "total_transaksi": 548000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "12/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260023",
+    "nama_pelanggan": "Mulyadi",
+    "frekuensi_pembelian": "11 Kali",
+    "produk_dibeli": "Nasi Kotak Rendang Padang (30x)",
+    "total_transaksi": 1140000,
+    "metode_pembayaran": "QRIS",
+    "tanggal_terakhir": "04/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260024",
+    "nama_pelanggan": "Tri Wahyuni",
+    "frekuensi_pembelian": "2 Kali",
+    "produk_dibeli": "Nasi Kotak Ayam Goreng Kremes (25x), Nasi Tumpeng Sedang (10 Porsi) (1x)",
+    "total_transaksi": 1100000,
+    "metode_pembayaran": "Transfer Bank Mandiri",
+    "tanggal_terakhir": "21/04/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260025",
+    "nama_pelanggan": "Slamet Riyadi",
+    "frekuensi_pembelian": "6 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Sate Ayam (4x), Nasi Tumpeng Sedang (10 Porsi) (5x)",
+    "total_transaksi": 1596000,
+    "metode_pembayaran": "E-Wallet (OVO/Dana)",
+    "tanggal_terakhir": "29/05/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260026",
+    "nama_pelanggan": "Siti Nurhaliza",
+    "frekuensi_pembelian": "11 Kali",
+    "produk_dibeli": "Paket Prasmanan Pernikahan (B) (51x), Paket Aqiqah Lengkap (53x), Nasi Kotak Ayam Bakar Premium (50x)",
+    "total_transaksi": 102760000,
+    "metode_pembayaran": "Tunai / COD",
+    "tanggal_terakhir": "05/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260027",
+    "nama_pelanggan": "Joko Purwanto",
+    "frekuensi_pembelian": "4 Kali",
+    "produk_dibeli": "Coffee Break Package / Pax (5x), Paket Menu Gubukan - Sate Ayam (1x), Nasi Kotak Ayam Goreng Kremes (25x)",
+    "total_transaksi": 949000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "25/03/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260028",
+    "nama_pelanggan": "Slamet Riyadi",
+    "frekuensi_pembelian": "9 Kali",
+    "produk_dibeli": "Nasi Tumpeng Sedang (10 Porsi) (2x), Paket Aqiqah Lengkap (72x)",
+    "total_transaksi": 130200000,
+    "metode_pembayaran": "Transfer Bank Mandiri",
+    "tanggal_terakhir": "01/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260029",
+    "nama_pelanggan": "Hendra Setiawan",
+    "frekuensi_pembelian": "10 Kali",
+    "produk_dibeli": "Coffee Break Package / Pax (2x), Nasi Kotak Bento Anak (20x)",
+    "total_transaksi": 610000,
+    "metode_pembayaran": "Transfer Bank BCA",
+    "tanggal_terakhir": "27/02/2026"
+  },
+  {
+    "id_transaksi": "TRX-20260030",
+    "nama_pelanggan": "Rizky Amelia",
+    "frekuensi_pembelian": "1 Kali",
+    "produk_dibeli": "Paket Menu Gubukan - Sate Ayam (2x)",
+    "total_transaksi": 48000,
+    "metode_pembayaran": "Transfer Bank BRI",
+    "tanggal_terakhir": "18/01/2026"
+  }
+]

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { MdSpaceDashboard, MdKeyboardArrowRight, MdKeyboardArrowDown, MdFastfood, MdExtension } from "react-icons/md";
-import { FaUsers, FaUtensils, FaClipboardList, FaTruck, FaChartBar, FaStar, FaStore, FaTools } from "react-icons/fa";
+import { FaUsers, FaUtensils, FaClipboardList, FaTruck, FaChartBar, FaStar, FaStore, FaTools, FaDatabase } from "react-icons/fa";
 
 export default function Sidebar() {
     const [openMenus, setOpenMenus] = useState({ Operational: true });
@@ -58,9 +58,14 @@ export default function Sidebar() {
                         <FaTools className="text-lg mr-4" />
                         <span className="text-sm font-bold">Fitur Oza</span>
                     </NavLink>
+                
                     <NavLink to="/komponen-shadcn" className={navLinkClass}>
                         <MdExtension className="text-xl mr-4" />
                         <span className="text-sm font-bold">Komponen ShadCN</span>
+                    </NavLink>
+                    <NavLink to="/data-transaksi" className={navLinkClass}>
+                        <FaDatabase className="text-lg mr-4" />
+                        <span className="text-sm font-bold">Data Transaksi</span>
                     </NavLink>
                 </div>
 
