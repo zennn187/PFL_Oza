@@ -29,7 +29,8 @@ const Products = React.lazy(() => import("./pages/Products"));
 const ProductsDetail = React.lazy(() => import("./pages/ProductsDetail"));
 const Components = React.lazy(() => import("./pages/Components"));
 const KomponenShadCN = React.lazy(() => import("./pages/KomponenShadCN"));
-const DataTransaksi = React.lazy(() => import("./pages/DataTransaksi"));
+const DataPelanggan = React.lazy(() => import("./pages/DataPelanggan"));
+const HookState = React.lazy(() => import("./pages/HookState"));
 
 function App() {
   const [count, setCount] = useState(0);
@@ -46,7 +47,8 @@ function App() {
           <Route path="/components" element={<Components />} />
           <Route path="/fitur-oza" element={<FiturOza />} />
           <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
-          <Route path="/data-transaksi" element={<DataTransaksi />} />
+          <Route path="/data-pelanggan" element={<DataPelanggan />} />
+          <Route path="/HookState" element={<HookState />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

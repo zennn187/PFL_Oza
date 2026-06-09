@@ -63,9 +63,13 @@ export default function Sidebar() {
                         <MdExtension className="text-xl mr-4" />
                         <span className="text-sm font-bold">Komponen ShadCN</span>
                     </NavLink>
-                    <NavLink to="/data-transaksi" className={navLinkClass}>
+                    <NavLink to="/data-pelanggan" className={navLinkClass}>
                         <FaDatabase className="text-lg mr-4" />
-                        <span className="text-sm font-bold">Data Transaksi</span>
+                        <span className="text-sm font-bold">Data Pelanggan</span>
+                    </NavLink>
+                    <NavLink to="/HookState" className={navLinkClass}>
+                        <FaDatabase className="text-lg mr-4" />
+                        <span className="text-sm font-bold">Hook State</span>
                     </NavLink>
                 </div>
 

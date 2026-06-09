@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import transactionsData from "../data/transactionsData.json";
 
-function DataTransaksi() {
+function DataPelanggan() {
   const [searchTerm, setSearchTerm] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("Semua");
   const [currentPage, setCurrentPage] = useState(1);
@@ -365,4 +365,4 @@ function DataTransaksi() {
   );
 }
 
-export default DataTransaksi;   
+export default DataPelanggan;   
