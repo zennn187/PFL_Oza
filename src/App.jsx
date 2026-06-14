@@ -42,7 +42,17 @@ function App() {
           <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
           <Route path="/data-pelanggan" element={<DataPelanggan />} />
           <Route path="/HookState" element={<HookState />} />
+          
           <Route path="/profil-katering" element={<ProfilKatering />} />
+
+          <Route path="/menu-list" element={<Products />} /> 
+          <Route path="/kategori-menu" element={<Components />} /> 
+          <Route path="/stok" element={<Products />} /> 
+          <Route path="/pesanan" element={<Orders />} /> 
+          <Route path="/pengiriman" element={<Dashboard />} /> 
+          <Route path="/pelanggan" element={<DataPelanggan />} /> 
+          <Route path="/laporan" element={<Dashboard />} /> 
+          <Route path="/ulasan" element={<Customers />} /> 
 
           <Route path="*" element={<NotFound />} />
         </Route>
