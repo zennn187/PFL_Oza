@@ -42,7 +42,7 @@ export default function Sidebar() {
                         <span className="text-sm font-bold">Dashboard</span>
                     </NavLink>
                     
-                    <NavLink to="/toko" className={navLinkClass}>
+                    <NavLink to="/profil-katering" className={navLinkClass}>
                         <FaStore className="text-lg mr-4" />
                         <span className="text-sm font-bold">Profil Katering</span>
                     </NavLink>
@@ -71,6 +71,11 @@ export default function Sidebar() {
                         <FaDatabase className="text-lg mr-4" />
                         <span className="text-sm font-bold">Hook State</span>
                     </NavLink>
+                    <NavLink to="/Customers" className={navLinkClass}>
+                        <FaDatabase className="text-lg mr-4" />
+                        <span className="text-sm font-bold">Customers</span>
+                    </NavLink>
+                
                 </div>
 
                 <div className="mt-6">

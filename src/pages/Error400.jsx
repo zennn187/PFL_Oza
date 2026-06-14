@@ -1,6 +1,8 @@
 import React from 'react';
 import { FaArrowLeft, FaExclamationCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+// 1. Import gambar dari folder assets ke dalam variabel
+import burgerImg from "../assets/burger-floating.png"; 
 
 const Error400 = () => {
   return (
@@ -16,6 +18,15 @@ const Error400 = () => {
             <h1 className="text-7xl font-extrabold text-gray-800 mb-2 tracking-tight">
                 400
             </h1>
+            
+            {/* 2. Tampilkan gambar burger yang sudah diimport di sini */}
+            <div className="w-40 h-40 flex items-center justify-center mb-4">
+              <img 
+                src={burgerImg} 
+                alt="Floating Burger" 
+                className="w-full h-full object-contain animate-bounce [animation-duration:3s]" 
+              />
+            </div>
             
             {/* Pesan Error */}
             <h2 className="text-xl font-bold text-gray-700 mb-3">

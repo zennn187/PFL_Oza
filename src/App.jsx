@@ -6,14 +6,6 @@ import { Route, Routes } from "react-router-dom";
 import Loading from "./components/Loading";
 import FiturOza from "./pages/FiturOza";
 import { Toaster } from "@/components/ui/sonner";
-// import MainLayout from "./layouts/MainLayout";
-// import AuthLayout from "./layouts/AuthLayout";
-// import Orders from "./pages/Orders";
-// import Customers from "./pages/Customers";
-// import NotFound from "./pages/NotFound";
-// import Login from "./pages/auth/Login";
-// import Register from "./pages/auth/Register";
-// import Forgot from "./pages/auth/Forgot";
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
@@ -31,6 +23,7 @@ const Components = React.lazy(() => import("./pages/Components"));
 const KomponenShadCN = React.lazy(() => import("./pages/KomponenShadCN"));
 const DataPelanggan = React.lazy(() => import("./pages/DataPelanggan"));
 const HookState = React.lazy(() => import("./pages/HookState"));
+const ProfilKatering = React.lazy(() => import("./pages/ProfilKatering"));
 
 function App() {
   const [count, setCount] = useState(0);
@@ -49,6 +42,8 @@ function App() {
           <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
           <Route path="/data-pelanggan" element={<DataPelanggan />} />
           <Route path="/HookState" element={<HookState />} />
+          <Route path="/profil-katering" element={<ProfilKatering />} />
+
           <Route path="*" element={<NotFound />} />
         </Route>
 
