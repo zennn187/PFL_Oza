@@ -4,17 +4,9 @@ import {
   FaCheckCircle,
   FaBan,
   FaDollarSign,
-  FaEllipsisH,
-  FaSearch,
-  FaBell,
-  FaEnvelope,
-  FaGift,
-  FaCog
+  FaEllipsisH
 } from "react-icons/fa";
 
-/**
- * MOCK DATA ADMIN ON-CATERING (Sesuai Kasus Katering & CRM)
- */
 const ordersData = [
   { orderId: "ORD030", customerName: "Eka Yulianti", orderDate: "2026-04-30", totalPrice: 2750000, status: "Pending", segment: "VIP" },
   { orderId: "ORD029", customerName: "Doni Prayoga", orderDate: "2026-04-29", totalPrice: 420000, status: "Completed", segment: "Regular" },
@@ -28,7 +20,6 @@ export default function AdminDashboard() {
   const [recentOrders, setRecentOrders] = useState([]);
 
   useEffect(() => {
-    // Pengurutan data berdasarkan tanggal terbaru
     const sortedOrders = [...ordersData]
       .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
       .slice(0, 5)
@@ -39,7 +30,6 @@ export default function AdminDashboard() {
       }));
     setRecentOrders(sortedOrders);
 
-    // Logika Perhitungan Statistik (Udah di-fix biar case-insensitive)
     const pendingT = ordersData.filter(o => o.status.toLowerCase() === "pending").length;
     const completedT = ordersData.filter(o => o.status.toLowerCase() === "completed").length;
     const cancelledT = ordersData.filter(o => o.status.toLowerCase() === "cancelled").length;
@@ -49,46 +39,10 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#232D42] pb-10">
-      
-      {/* TOP NAVIGATION BAR */}
-      <div className="flex items-center justify-between px-8 py-4 bg-transparent">
-        <div className="relative w-72">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-            <FaSearch className="text-sm" />
-          </span>
-          <input 
-            type="text" 
-            placeholder="Cari pesanan atau pelanggan..." 
-            className="block w-full pl-10 pr-3 py-2 border border-transparent rounded-full bg-white text-sm focus:outline-none focus:ring-1 focus:ring-orange-300 transition-all shadow-sm"
-          />
-        </div>
-
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-4 text-gray-400">
-            <button className="hover:text-orange-500 transition-colors"><FaBell /></button>
-            <button className="hover:text-orange-500 transition-colors"><FaEnvelope /></button>
-            <button className="hover:text-orange-500 transition-colors"><FaGift /></button>
-            <button className="hover:text-orange-500 transition-colors"><FaCog /></button>
-          </div>
-          <div className="flex items-center gap-3 ml-2 border-l pl-6 border-gray-200">
-            <div className="text-right">
-              <p className="text-sm font-bold leading-none">Oza Okta</p>
-              <p className="text-[10px] text-gray-400 mt-1">Admin Utama</p>
-            </div>
-            <img 
-              src="https://ui-avatars.com/api/?name=Oza+Okta&background=f97316&color=fff" 
-              alt="Admin Profile" 
-              className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-            />
-          </div>
-        </div>
-      </div>
-
+    <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#232D42] pb-10 pt-6">
       <div className="px-8">
         <h1 className="text-2xl font-bold mb-6">Dashboard On-Catering</h1>
 
-        {/* WELCOME BANNER */}
         <div className="relative w-full mb-8 overflow-hidden bg-white rounded-[24px] shadow-sm group">
           <div className="absolute inset-0 z-0 opacity-10">
             <img 
@@ -110,7 +64,6 @@ export default function AdminDashboard() {
           <div className="absolute -top-12 -right-12 w-48 h-48 bg-orange-50 rounded-full blur-3xl"></div>
         </div>
 
-        {/* STATS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[
             { label: "Pending Orders", val: counts.pending, icon: FaShoppingCart, bg: "bg-blue-50", text: "text-blue-500" },
@@ -130,7 +83,6 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* RECENT ORDERS TABLE */}
         <div className="bg-white rounded-[24px] shadow-[0_8px_24px_rgba(0,0,0,0.02)] overflow-hidden border border-gray-50">
           <div className="px-8 py-6 flex justify-between items-center">
             <div>

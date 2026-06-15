@@ -1,8 +1,6 @@
 import React, { Suspense, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./assets/tailwind.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Loading from "./components/Loading";
 import FiturOza from "./pages/FiturOza";
 import { Toaster } from "@/components/ui/sonner";
@@ -24,14 +22,34 @@ const KomponenShadCN = React.lazy(() => import("./pages/KomponenShadCN"));
 const DataPelanggan = React.lazy(() => import("./pages/DataPelanggan"));
 const HookState = React.lazy(() => import("./pages/HookState"));
 const ProfilKatering = React.lazy(() => import("./pages/ProfilKatering"));
+const LandingPage = React.lazy(() => import("./pages/guest/LandingPage"));
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
+  const [authState, setAuthState] = useState(() => {
+    const session = localStorage.getItem("user_session");
+    return session ? "authenticated" : "guest";
+  });
+
+  const handleGlobalLogout = () => {
+    localStorage.removeItem("user_session");
+    setAuthState("guest");
+  };
 
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route element={<MainLayout />}>
+        <Route 
+          path="/" 
+          element={
+            authState === "guest" ? (
+              <LandingPage authState={authState} setAuthState={setAuthState} />
+            ) : (
+              <Navigate to="/dashboard" />
+            )
+          } 
+        />
+
+        <Route element={authState === "authenticated" ? <MainLayout onLogout={handleGlobalLogout} /> : <Navigate to="/login" />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/customers" element={<Customers />} />
@@ -42,7 +60,6 @@ function App() {
           <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
           <Route path="/data-pelanggan" element={<DataPelanggan />} />
           <Route path="/HookState" element={<HookState />} />
-          
           <Route path="/profil-katering" element={<ProfilKatering />} />
 
           <Route path="/menu-list" element={<Products />} /> 
@@ -58,7 +75,7 @@ function App() {
         </Route>
 
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setAuthState={setAuthState} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forgot />} />
         </Route>
@@ -67,5 +84,3 @@ function App() {
     </Suspense>
   );
 }
-
-export default App;

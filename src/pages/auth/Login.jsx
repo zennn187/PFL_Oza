@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { userAPI } from "../../services/userAPI";
 
-export default function Login() {
+export default function Login({ setAuthState }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -31,6 +31,12 @@ export default function Login() {
         try {
             const user = await userAPI.loginUser(dataForm.credential, dataForm.password);
             localStorage.setItem("user_session", JSON.stringify(user));
+            
+            // Mengubah state global agar rute dashboard terbuka
+            if (typeof setAuthState === "function") {
+                setAuthState("authenticated");
+            }
+            
             navigate("/dashboard");
         } catch (err) {
             setError(err.message);
