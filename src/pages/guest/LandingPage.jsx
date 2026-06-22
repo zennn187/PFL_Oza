@@ -30,6 +30,8 @@ import heroSlideBangkokTable from "../../assets/hero_slide_bangkok_table.jpg";
 import heroSlideGrazingTable from "../../assets/hero_slide_grazing_table.jpg";
 import heroSlideLoungeDining from "../../assets/hero_slide_lounge_dining.jpg";
 import heroSlideSeafoodPlatter from "../../assets/hero_slide_seafood_platter.jpg";
+import { useCart } from "../../lib/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const heroSlides = [
   {
@@ -98,11 +100,13 @@ function ScrollReveal({ children, delay = 0 }) {
 
 export default function LandingPage({ authState, setAuthState }) {
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const { cartItems, totalPrice, addToCart, removeFromCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
-    }, 4200);
+    }, 5000);
 
     return () => window.clearInterval(timer);
   }, []);
@@ -180,7 +184,7 @@ export default function LandingPage({ authState, setAuthState }) {
       name: "Sarah Johnson",
       role: "Food enthusiast",
       comment:
-        "Rasanya konsisten enak, plating rapi, dan seafood-nya terasa fresh.",
+        "Rasanya konsisten enak, plating rapi, and seafood-nya terasa fresh.",
     },
     {
       name: "Michael Chen",
@@ -194,11 +198,6 @@ export default function LandingPage({ authState, setAuthState }) {
       comment:
         "Pengiriman cepat, makanan masih hangat, dan porsinya memuaskan.",
     },
-  ];
-
-  const cartItems = [
-    { name: "Mushroom Pizza", qty: 1, price: "Rp 145.000", icon: Pizza },
-    { name: "Beef Burger", qty: 2, price: "Rp 190.000", icon: Beef },
   ];
 
   const handleLogoutAction = () => {
@@ -216,70 +215,75 @@ export default function LandingPage({ authState, setAuthState }) {
     setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
   };
 
+  const formatRupiah = (amount) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
   return (
     <div className="min-h-screen bg-[#fffaf5] text-slate-950 font-sans antialiased overflow-x-hidden selection:bg-orange-500 selection:text-white scroll-smooth">
       <style>
         {`
           @keyframes heroSlideFrameFloat {
             0%, 100% {
-              transform: translateX(-50%) translateY(0) rotate(-1.2deg);
+              transform: translate3d(-50%, 0, 0) rotate3d(0, 0, 1, -0.5deg);
             }
             50% {
-              transform: translateX(-50%) translateY(-16px) rotate(1.2deg);
+              transform: translate3d(-50%, -10px, 0) rotate3d(0, 0, 1, 0.5deg);
             }
           }
 
           @keyframes heroSlideGlow {
             0%, 100% {
-              opacity: 0.55;
-              transform: translateX(-50%) scale(0.96);
+              opacity: 0.3;
+              transform: translate3d(-50%, 0, 0) scale3d(0.98, 0.98, 1);
             }
             50% {
-              opacity: 0.9;
-              transform: translateX(-50%) scale(1.06);
-            }
-          }
-
-          @keyframes heroSlideImageZoom {
-            from {
-              transform: scale(1.02);
-            }
-            to {
-              transform: scale(1.12);
+              opacity: 0.5;
+              transform: translate3d(-50%, 0, 0) scale3d(1.02, 1.02, 1);
             }
           }
 
           @keyframes fadeInUp {
             from {
               opacity: 0;
-              transform: translateY(24px);
+              transform: translate3d(0, 20px, 0);
             }
             to {
               opacity: 1;
-              transform: translateY(0);
+              transform: translate3d(0, 0, 0);
             }
           }
 
           @keyframes floatBurger {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(3deg); }
+            0%, 100% { transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg); }
+            50% { transform: translate3d(0, -10px, 0) rotate3d(0, 0, 1, 2deg); }
           }
 
           .animate-fade-in-up {
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           }
 
           .animate-float-burger {
             animation: floatBurger 4s ease-in-out infinite;
           }
 
-          .delay-1 { animation-delay: 150ms; }
-          .delay-2 { animation-delay: 300ms; }
+          .delay-1 { animation-delay: 100ms; }
+          .delay-2 { animation-delay: 200ms; }
+
+          .gpu-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            will-change: transform, opacity;
+          }
 
           @media (prefers-reduced-motion: reduce) {
             .hero-slide-frame,
             .hero-slide-glow,
-            .hero-slide-image,
             .animate-fade-in-up,
             .animate-float-burger,
             .transition-all {
@@ -339,7 +343,7 @@ export default function LandingPage({ authState, setAuthState }) {
                 ].map(([value, label], index) => (
                   <div
                     key={label}
-                    style={{ animationDelay: `${(index + 2) * 150}ms` }}
+                    style={{ animationDelay: `${(index + 2) * 100}ms` }}
                     className="animate-fade-in-up rounded-2xl border border-orange-100 bg-white/75 p-4 shadow-sm backdrop-blur transition-all duration-300 hover:border-orange-300 hover:bg-white hover:shadow-md group"
                   >
                     <p className="text-2xl font-black text-slate-950 sm:text-3xl transition-transform duration-300 group-hover:scale-105 origin-left">
@@ -360,44 +364,81 @@ export default function LandingPage({ authState, setAuthState }) {
               <div className="absolute inset-x-4 bottom-0 top-12 rounded-[2rem] border border-orange-100 bg-white/70 shadow-2xl shadow-orange-900/10 backdrop-blur" />
 
               <div
-                className="hero-slide-glow absolute left-1/2 top-20 h-72 w-[80%] max-w-[480px] rounded-[2rem] bg-orange-300/35 blur-3xl"
+                className="hero-slide-glow absolute left-1/2 top-20 h-72 w-[80%] max-w-[480px] rounded-[2rem] bg-orange-300/35 blur-3xl gpu-accelerated"
                 style={{
-                  animation: "heroSlideGlow 5.5s ease-in-out infinite",
+                  animation: "heroSlideGlow 5s linear infinite",
                 }}
               />
 
               <div
-                className="hero-slide-frame absolute left-1/2 top-10 z-10 w-[88%] max-w-[520px] overflow-hidden rounded-[1.75rem] border border-white/80 bg-slate-950 shadow-2xl shadow-orange-950/20 ring-8 ring-white/45 group/hero"
+                className="hero-slide-frame absolute left-1/2 top-10 z-10 w-[88%] max-w-[520px] overflow-hidden rounded-[1.75rem] border border-white/80 bg-slate-950 shadow-2xl shadow-orange-950/20 ring-8 ring-white/45 group/hero gpu-accelerated"
                 style={{
-                  animation: "heroSlideFrameFloat 6s ease-in-out infinite",
+                  animation: "heroSlideFrameFloat 5s ease-in-out infinite",
                 }}
               >
-                <div className="relative aspect-[4/5] w-full overflow-hidden">
-                  {heroSlides.map((slide, index) => (
-                    <img
-                      key={slide.title}
-                      src={slide.image}
-                      alt={slide.title}
-                      className={`hero-slide-image absolute inset-0 h-full w-full object-cover transition-all duration-1000 ease-out ${
-                        activeHeroSlide === index
-                          ? "opacity-100 blur-0 scale-100"
-                          : "opacity-0 blur-sm scale-105"
-                      }`}
-                      style={{
-                        animation:
-                          activeHeroSlide === index
-                            ? "heroSlideImageZoom 4.2s ease-out both"
-                            : "none",
-                      }}
-                    />
-                  ))}
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-950 rounded-[1.6rem]">
+                  {heroSlides.map((slide, index) => {
+                    const isCurrent = activeHeroSlide === index;
+                    return (
+                      <div
+                        key={slide.title}
+                        className={`absolute inset-0 h-full w-full transition-opacity duration-700 ease-in-out ${
+                          isCurrent
+                            ? "opacity-100 z-10"
+                            : "opacity-0 z-0 pointer-events-none"
+                        }`}
+                      >
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
+                          className={`h-full w-full object-cover transition-transform duration-[5000ms] ease-out will-change-transform ${
+                            isCurrent ? "scale-105 translate-x-0.5" : "scale-100 translate-x-0"
+                          }`}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/25 to-transparent z-10" />
+                        
+                        <div className="absolute inset-x-0 bottom-0 p-5 text-left text-white sm:p-6 z-20">
+                          <p
+                            className={`text-xs font-black uppercase tracking-[0.2em] text-orange-300 transition-all duration-500 transform ${
+                              isCurrent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                            }`}
+                            style={{ transitionDelay: isCurrent ? "200ms" : "0ms" }}
+                          >
+                            {slide.label}
+                          </p>
+                          <p
+                            className={`mt-2 max-w-sm text-xl font-black leading-tight sm:text-2xl transition-all duration-500 transform ${
+                              isCurrent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+                            }`}
+                            style={{ transitionDelay: isCurrent ? "350ms" : "0ms" }}
+                          >
+                            {slide.title}
+                          </p>
+                          <div className="mt-4 flex gap-2">
+                            {heroSlides.map((_, dotIndex) => (
+                              <button
+                                key={dotIndex}
+                                type="button"
+                                aria-label={`Tampilkan slide ${dotIndex + 1}`}
+                                onClick={() => setActiveHeroSlide(dotIndex)}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${
+                                  activeHeroSlide === dotIndex
+                                    ? "w-9 bg-orange-400"
+                                    : "w-3 bg-white/50 hover:bg-white"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-white/5" />
                   <button
                     type="button"
                     aria-label="Tampilkan foto sebelumnya"
                     onClick={showPreviousHeroSlide}
-                    className="absolute left-4 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-white/20 text-white shadow-xl backdrop-blur-md opacity-0 group-hover/hero:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-white hover:text-slate-950 focus-visible:ring-2 focus-visible:ring-orange-300 sm:left-5 sm:h-12 sm:w-12"
+                    className="absolute left-4 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-white/20 text-white shadow-xl backdrop-blur-md opacity-0 group-hover/hero:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-white hover:text-slate-950 focus-visible:ring-2 focus-visible:ring-orange-300 sm:left-5 sm:h-12 sm:w-12"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -405,33 +446,10 @@ export default function LandingPage({ authState, setAuthState }) {
                     type="button"
                     aria-label="Tampilkan foto berikutnya"
                     onClick={showNextHeroSlide}
-                    className="absolute right-4 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-white/20 text-white shadow-xl backdrop-blur-md opacity-0 group-hover/hero:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-white hover:text-slate-950 focus-visible:ring-2 focus-visible:ring-orange-300 sm:right-5 sm:h-12 sm:w-12"
+                    className="absolute right-4 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-white/20 text-white shadow-xl backdrop-blur-md opacity-0 group-hover/hero:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-white hover:text-slate-950 focus-visible:ring-2 focus-visible:ring-orange-300 sm:right-5 sm:h-12 sm:w-12"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
-                  <div className="absolute inset-x-0 bottom-0 p-5 text-left text-white sm:p-6">
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-200">
-                      {heroSlides[activeHeroSlide].label}
-                    </p>
-                    <p className="mt-2 max-w-sm text-xl font-black leading-tight sm:text-2xl">
-                      {heroSlides[activeHeroSlide].title}
-                    </p>
-                    <div className="mt-4 flex gap-2">
-                      {heroSlides.map((slide, index) => (
-                        <button
-                          key={slide.label}
-                          type="button"
-                          aria-label={`Tampilkan ${slide.label}`}
-                          onClick={() => setActiveHeroSlide(index)}
-                          className={`h-1.5 rounded-full transition-all duration-300 ${
-                            activeHeroSlide === index
-                              ? "w-9 bg-orange-400"
-                              : "w-3 bg-white/50 hover:bg-white"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -542,7 +560,7 @@ export default function LandingPage({ authState, setAuthState }) {
                       <div
                         className={`mb-4 flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${
                           cat.active
-                            ? "bg-orange-500 text-white"
+                            ? "bg-orange-50 text-white"
                             : "bg-orange-50 text-orange-600 group-hover:bg-orange-100"
                         }`}
                       >
@@ -606,6 +624,7 @@ export default function LandingPage({ authState, setAuthState }) {
                               </p>
                             </div>
                             <button
+                              onClick={() => addToCart({ name: item.name, price: item.price, icon: item.icon })}
                               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition-all duration-300 hover:bg-orange-600 hover:rotate-90 active:scale-90 shadow-md"
                               aria-label={`Tambah ${item.name}`}
                             >
@@ -667,6 +686,7 @@ export default function LandingPage({ authState, setAuthState }) {
                             </p>
                           </div>
                           <button
+                            onClick={() => removeFromCart(item.name)}
                             className="text-slate-400 transition-all duration-300 hover:text-red-500 hover:scale-110 p-1"
                             aria-label={`Hapus ${item.name}`}
                           >
@@ -682,7 +702,7 @@ export default function LandingPage({ authState, setAuthState }) {
                           Subtotal
                         </span>
                         <span className="font-black text-slate-950">
-                          Rp 335.000
+                          {formatRupiah(totalPrice)}
                         </span>
                       </div>
                       <div className="mt-3 flex items-center justify-between text-sm">
@@ -697,12 +717,20 @@ export default function LandingPage({ authState, setAuthState }) {
                       <div className="mt-4 flex items-end justify-between border-t border-orange-200 pt-4">
                         <span className="font-black text-slate-950">Total</span>
                         <span className="text-2xl font-black text-orange-600">
-                          Rp 335.000
+                          {formatRupiah(totalPrice)}
                         </span>
                       </div>
                     </div>
 
-                    <button className="flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 py-4 text-sm font-black text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:bg-slate-950 hover:shadow-xl active:scale-98 group">
+                    <button 
+                      onClick={() => cartItems.length > 0 && navigate("/checkout")}
+                      disabled={cartItems.length === 0}
+                      className={`flex w-full items-center justify-center gap-2 rounded-full py-4 text-sm font-black text-white shadow-lg transition-all duration-300 group ${
+                        cartItems.length > 0 
+                          ? "bg-orange-600 shadow-orange-600/20 hover:bg-slate-950 hover:shadow-xl active:scale-98 cursor-pointer" 
+                          : "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
+                      }`}
+                    >
                       Checkout
                       <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </button>
@@ -713,92 +741,86 @@ export default function LandingPage({ authState, setAuthState }) {
           </div>
         </section>
 
-        <section className="bg-slate-950 px-4 py-16 text-white sm:px-8">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1fr] lg:items-center">
+        <section className="bg-white px-4 py-16 sm:px-8">
+          <div className="mx-auto max-w-7xl">
             <ScrollReveal>
-              <div className="text-left">
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white transition-transform duration-500 hover:rotate-[360deg]">
-                  <Heart className="h-7 w-7 fill-current" />
-                </div>
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-300">
-                  Testimoni
+              <div className="mb-12 text-center">
+                <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
+                  Ulasan Pelanggan
                 </p>
-                <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                  Dipercaya untuk pesanan harian sampai acara spesial.
+                <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                  Apa kata mereka tentang kami?
                 </h2>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
-                  Tim dapur kami menjaga rasa, porsi, dan pengiriman agar setiap
-                  pesanan terasa siap disajikan.
-                </p>
               </div>
             </ScrollReveal>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {testimonials.map((test, index) => (
-                <ScrollReveal key={test.name} delay={index * 150}>
-                  <article className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 text-left transition-all duration-300 hover:bg-white/[0.1] hover:border-white/20 hover:-translate-y-1 group h-full flex flex-col justify-between">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {testimonials.map((testi, index) => (
+                <ScrollReveal key={testi.name} delay={index * 150}>
+                  <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6 text-left shadow-sm transition-all duration-300 hover:bg-white hover:border-orange-200 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col justify-between group">
                     <div>
-                      <div className="mb-4 flex gap-1 text-amber-300">
+                      <div className="mb-4 flex items-center gap-1 text-amber-400">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-current transition-transform duration-300 group-hover:scale-110" style={{ transitionDelay: `${i * 30}ms` }} />
+                          <Star key={i} className="h-4 w-4 fill-current" />
                         ))}
                       </div>
-                      <p className="text-sm leading-7 text-slate-100 italic">
-                        "{test.comment}"
+                      <p className="text-sm leading-7 text-slate-700 italic">
+                        "{testi.comment}"
                       </p>
                     </div>
-                    <div className="mt-5 flex items-center gap-3 pt-4 border-t border-white/5">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-500 text-sm font-black text-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                        {test.name
-                          .split(" ")
-                          .map((word) => word[0])
-                          .join("")}
+                    <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-black text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
+                        {testi.name[0]}
                       </div>
                       <div>
-                        <p className="text-sm font-black text-white">
-                          {test.name}
-                        </p>
-                        <p className="text-xs font-semibold text-slate-400">
-                          {test.role}
-                        </p>
+                        <h4 className="text-sm font-black text-slate-950">{testi.name}</h4>
+                        <p className="text-xs font-semibold text-slate-400">{testi.role}</p>
                       </div>
                     </div>
-                  </article>
+                  </div>
                 </ScrollReveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative overflow-hidden bg-white px-4 py-16 sm:px-8">
-          <ScrollReveal>
-            <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 rounded-[2rem] bg-orange-600 p-8 text-white shadow-2xl shadow-orange-900/20 md:grid-cols-[1fr_280px] md:p-12 overflow-hidden group/cta">
-              <div className="text-left relative z-10">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.18em]">
-                  <Flame className="h-4 w-4 animate-pulse" />
-                  Fresh from kitchen
+        <section className="px-4 pb-20 pt-10 sm:px-8">
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal>
+              <div className="group/cta relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-orange-500 to-amber-600 px-6 py-12 text-left text-white shadow-2xl shadow-orange-900/20 sm:px-12 md:p-20">
+                <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-black/10 blur-3xl" />
+                
+                <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[1fr_280px] lg:grid-cols-[1fr_320px]">
+                  <div className="relative z-10 max-w-2xl">
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.18em]">
+                      <Flame className="h-4 w-4 animate-pulse" />
+                      Dapur Higienis Profesional
+                    </div>
+                    <h2 className="text-3xl font-black tracking-tight sm:text-5xl leading-[1.1]">
+                      Siap pesan hidangan favorit Anda?
+                    </h2>
+                    <p className="mt-4 text-sm leading-relaxed text-orange-50/90">
+                      Pilih ragam menu katering terbaik Anda sekarang, atur kuantitas sesuai tipe event, 
+                      dan biarkan para juru masak ahli On-Catering menyiapkannya secara sempurna.
+                    </p>
+                    <button className="mt-8 inline-flex items-center gap-2 rounded-full bg-slate-950 px-7 py-4 text-sm font-black text-white shadow-xl transition-all duration-300 hover:bg-white hover:text-orange-600 hover:-translate-y-1 active:scale-95 group/btn">
+                      Mulai Pemesanan
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                    </button>
+                  </div>
+
+                  <div className="relative flex justify-center md:justify-end items-center min-h-[180px] sm:min-h-[220px] md:min-h-0">
+                    <img
+                      src={burgerImage}
+                      alt="Burger premium On-Catering"
+                      className="w-44 sm:w-56 md:w-72 lg:w-80 drop-shadow-[0_20px_30px_rgba(0,0,0,0.35)] animate-float-burger transition-transform duration-500 group-hover/cta:scale-105 object-contain"
+                    />
+                  </div>
                 </div>
-                <h2 className="text-3xl font-black tracking-tight sm:text-5xl">
-                  Siap pesan hidangan favoritmu?
-                </h2>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-orange-50">
-                  Pilih menu, atur jumlah pesanan, lalu biarkan On-Catering
-                  menyiapkan semuanya dengan rapi.
-                </p>
-                <button className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-black text-orange-600 shadow-xl transition-all duration-300 hover:bg-slate-950 hover:text-white hover:-translate-y-1 active:scale-95 group/btn">
-                  Mulai Order
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                </button>
               </div>
-              <div className="relative hidden min-h-64 md:block">
-                <img
-                  src={burgerImage}
-                  alt="Burger premium On-Catering"
-                  className="absolute -bottom-12 right-0 w-72 drop-shadow-2xl animate-float-burger transition-transform duration-500 group-hover/cta:scale-105"
-                />
-              </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
         </section>
       </main>
     </div>

@@ -4,8 +4,11 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import Loading from "./components/Loading";
 import FiturOza from "./pages/FiturOza";
 import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "./lib/CartContext";
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const LoyaltyPage = React.lazy(() => import("./pages/member/LoyaltyPage"));
+const LoyaltyAdmin = React.lazy(() => import("./pages/admin/LoyaltyAdmin"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Orders = React.lazy(() => import("./pages/Orders"));
 const Customers = React.lazy(() => import("./pages/Customers"));
@@ -23,6 +26,7 @@ const DataPelanggan = React.lazy(() => import("./pages/DataPelanggan"));
 const HookState = React.lazy(() => import("./pages/HookState"));
 const ProfilKatering = React.lazy(() => import("./pages/ProfilKatering"));
 const LandingPage = React.lazy(() => import("./pages/guest/LandingPage"));
+const Checkout = React.lazy(() => import("./pages/member/Checkout"));
 
 export default function App() {
   const [authState, setAuthState] = useState(() => {
@@ -36,51 +40,56 @@ export default function App() {
   };
 
   return (
-    <Suspense fallback={<Loading />}>
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            authState === "guest" ? (
-              <LandingPage authState={authState} setAuthState={setAuthState} />
-            ) : (
-              <Navigate to="/dashboard" />
-            )
-          } 
-        />
+    <CartProvider>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              authState === "guest" ? (
+                <LandingPage authState={authState} setAuthState={setAuthState} />
+              ) : (
+                <Navigate to="/dashboard" />
+              )
+            } 
+          />
+          <Route path="/member" element={<LoyaltyPage authState={authState} setAuthState={setAuthState} />} />
+          <Route path="/checkout" element={<Checkout />} />
 
-        <Route element={authState === "authenticated" ? <MainLayout onLogout={handleGlobalLogout} /> : <Navigate to="/login" />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductsDetail />} />
-          <Route path="/components" element={<Components />} />
-          <Route path="/fitur-oza" element={<FiturOza />} />
-          <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
-          <Route path="/data-pelanggan" element={<DataPelanggan />} />
-          <Route path="/HookState" element={<HookState />} />
-          <Route path="/profil-katering" element={<ProfilKatering />} />
+          <Route element={authState === "authenticated" ? <MainLayout onLogout={handleGlobalLogout} /> : <Navigate to="/login" />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/loyalty-member" element={<LoyaltyAdmin />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductsDetail />} />
+            <Route path="/components" element={<Components />} />
+            <Route path="/fitur-oza" element={<FiturOza />} />
+            <Route path="/komponen-shadcn" element={<KomponenShadCN />} />
+            <Route path="/data-pelanggan" element={<DataPelanggan />} />
+            <Route path="/HookState" element={<HookState />} />
+            <Route path="/profil-katering" element={<ProfilKatering />} />
 
-          <Route path="/menu-list" element={<Products />} /> 
-          <Route path="/kategori-menu" element={<Components />} /> 
-          <Route path="/stok" element={<Products />} /> 
-          <Route path="/pesanan" element={<Orders />} /> 
-          <Route path="/pengiriman" element={<Dashboard />} /> 
-          <Route path="/pelanggan" element={<DataPelanggan />} /> 
-          <Route path="/laporan" element={<Dashboard />} /> 
-          <Route path="/ulasan" element={<Customers />} /> 
+            <Route path="/menu-list" element={<Products />} /> 
+            <Route path="/kategori-menu" element={<Components />} /> 
+            <Route path="/stok" element={<Products />} /> 
+            <Route path="/pesanan" element={<Orders />} /> 
+            <Route path="/pengiriman" element={<Dashboard />} /> 
+            <Route path="/pelanggan" element={<DataPelanggan />} /> 
+            <Route path="/laporan" element={<Dashboard />} /> 
+            <Route path="/ulasan" element={<Customers />} /> 
 
-          <Route path="*" element={<NotFound />} />
-        </Route>
+            <Route path="*" element={<NotFound />} />
+          </Route>
 
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login setAuthState={setAuthState} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot" element={<Forgot />} />
-        </Route>
-      </Routes>
-      <Toaster />
-    </Suspense>
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login setAuthState={setAuthState} />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot" element={<Forgot />} />
+          </Route>
+        </Routes>
+        <Toaster />
+      </Suspense>
+    </CartProvider>
   );
 }

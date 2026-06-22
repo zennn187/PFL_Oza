@@ -1,21 +1,33 @@
-import Card from "./Card";
-import Button from "./Button";
+import React from 'react';
+import { useCart } from '../lib/CartContext';
 
-export default function ProductCard({ image, title, category, price, description }) {
+function ProductCard({ product }) {
+  const { addToCart } = useCart();
+
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+  };
+
   return (
-    <Card className="flex flex-col h-full overflow-hidden !p-0">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
-      <div className="p-5 flex flex-col flex-grow">
-        <span className="inline-block self-start bg-orange-50 text-[#FF6B35] text-xs font-bold px-2.5 py-1 rounded-md mb-2">
-          {category}
-        </span>
-        <h3 className="text-base font-bold text-gray-800 mb-1">{title}</h3>
-        <p className="text-xs text-gray-500 mb-4 line-clamp-2 flex-grow">{description}</p>
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-50">
-          <span className="text-lg font-black text-gray-900">{price}</span>
-          <Button type="primary">Order</Button>
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between relative">
+      <div>
+        <div className="w-full h-32 bg-orange-50 rounded-xl flex items-center justify-center mb-4">
+          <span className="text-4xl">🍽️</span>
         </div>
+        <h3 className="font-bold text-lg text-gray-900">{product.name}</h3>
+        <p className="text-gray-500 text-sm mt-1">{product.description}</p>
       </div>
-    </Card>
+      <div className="flex items-center justify-between mt-6">
+        <span className="text-orange-500 font-bold text-lg">{formatRupiah(product.price)}</span>
+        <button 
+          onClick={() => addToCart(product)}
+          className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl hover:bg-orange-500 transition-colors"
+        >
+          +
+        </button>
+      </div>
+    </div>
   );
 }
+
+export default ProductCard;

@@ -85,6 +85,7 @@ export default function Navbar({ isAuthenticated, userRole = "Admin Utama", onLo
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-[#F97316] transition-colors">Home</button>
         <button onClick={() => scrollToSection("menu-category")} className="hover:text-[#F97316] transition-colors">Menu Category</button>
         <button onClick={() => scrollToSection("trending-orders")} className="hover:text-[#F97316] transition-colors">Trending Orders</button>
+        <button onClick={() => navigate("/member")} className="hover:text-[#F97316] transition-colors">Member</button>
       </div>
 
       <div className="flex items-center gap-4">

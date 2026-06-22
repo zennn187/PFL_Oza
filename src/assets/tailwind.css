@@ -19,39 +19,48 @@
     --font-barlow: "Barlow", sans-serif;
     --font-poppins: "Poppins", sans-serif;
 
-    --color-latar: #f9fafb; /* gray-50 */
-    --color-teks: #1f2937; /* gray-800 */
-    --color-teks-samping: #6b7280; /* gray-500 */
-    --color-garis: #f3f4f6; /* gray-100 */
+    --color-latar: #f9fafb;
+    --color-teks: #1f2937;
+    --color-teks-samping: #6b7280;
+    --color-garis: #f3f4f6;
 
-    /* Tema Aprycot Lite */
-    --color-utama: #f97316; /* orange-500 */
-    --color-utama-hover: #ea580c; /* orange-600 */
+    --color-utama: #f97316;
+    --color-utama-hover: #ea580c;
     --color-merah: #ef4444; 
     --color-biru: #3b82f6;
     --color-hijau: #10b981; 
 }
 
+/* ==================== CORE BASE & PERFORMANCE OPTIMIZATION ==================== */
 body {
-    @apply font-barlow text-gray-800 bg-gray-50;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
-/* ==================== ANIMATIONS UTILITIES ==================== */
+/* Memaksa browser mengisolasi rendering animasi slider agar tidak membebani layout utama */
+.gpu-slider-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+}
 
+/* ==================== ANIMATIONS UTILITIES (GPU REWRITTEN) ==================== */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
+/* Diubah menggunakan translate3d agar diproses langsung oleh kartu grafis (GPU), bukan CPU */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translate3d(0, 15px, 0);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -68,8 +77,6 @@ body {
 .animation-delay-300 { animation-delay: 300ms; }
 
 /* ==================== CUSTOM UTILITIES ==================== */
-
-/* Shimmer effect untuk loading */
 @keyframes shimmer {
     0% { background-position: -1000px 0; }
     100% { background-position: 1000px 0; }
@@ -81,7 +88,7 @@ body {
     animation: shimmer 2s infinite linear;
 }
 
-/* Custom scrollbar - Tema Oranye */
+/* Custom scrollbar - Dioptimalkan agar tidak memicu lag saat di-scroll */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -92,29 +99,26 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #fdba74; /* orange-300 */
+    background: #fdba74;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-utama); /* orange-500 */
+    background: #f97316;
 }
 
-/* Focus ring bersih */
 input:focus, select:focus, textarea:focus, button:focus {
     outline: none;
 }
 
-/* Gradient text - Tema Oranye */
 .gradient-text {
-    background: linear-gradient(135deg, var(--color-utama), #fb923c); /* orange-500 to orange-400 */
+    background: linear-gradient(135deg, #f97316, #fb923c);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 }
 
 /* ==================== PRINT STYLES ==================== */
-
 @media print {
     .no-print {
         display: none;
@@ -238,12 +242,12 @@ input:focus, select:focus, textarea:focus, button:focus {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-    }
+    @apply border-border outline-none;
+  }
   body {
-    @apply bg-background text-foreground;
-    }
+    @apply bg-background text-foreground font-barlow;
+  }
   html {
     @apply font-sans;
-    }
+  }
 }

@@ -6,6 +6,7 @@ import {
   MdKeyboardArrowDown,
   MdFastfood,
   MdExtension,
+  MdCardMembership,
 } from "react-icons/md";
 import {
   FaUsers,
@@ -61,6 +62,11 @@ export default function Sidebar() {
           <NavLink to="/dashboard" className={navLinkClass}>
             <MdSpaceDashboard className="text-xl mr-4" />
             <span className="text-sm font-bold">Dashboard</span>
+          </NavLink>
+
+          <NavLink to="/loyalty-member" className={navLinkClass}>
+            <MdCardMembership className="text-xl mr-4" />
+            <span className="text-sm font-bold">Loyalty Member</span>
           </NavLink>
 
           <NavLink to="/profil-katering" className={navLinkClass}>
