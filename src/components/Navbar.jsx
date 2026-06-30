@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaSearch } from "react-icons/fa";
 import { MdNotifications, MdMail, MdCardGiftcard, MdSettings } from "react-icons/md";
 
-export default function Navbar({ isAuthenticated, userRole = "Admin Utama", onLogout }) {
+export default function Navbar({ isAuthenticated, userRole = "Admin Utama", userName = "Oza Okta", onLogout }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -52,11 +52,16 @@ export default function Navbar({ isAuthenticated, userRole = "Admin Utama", onLo
 
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate("/profil-katering")}>
             <div className="text-right hidden md:block">
-              <p className="text-xs font-bold text-gray-800 group-hover:text-[#F97316] transition-colors">Oza Okta</p>
+              <p className="text-xs font-bold text-gray-800 group-hover:text-[#F97316] transition-colors">{userName || "Member"}</p>
               <p className="text-[10px] text-gray-400 font-medium">{userRole}</p>
             </div>
             <div className="w-9 h-9 rounded-full bg-orange-500 text-white font-bold text-xs flex items-center justify-center shadow-sm shadow-orange-500/20">
-              OO
+              {(userName || "Member")
+                .split(" ")
+                .map((part) => part[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
             </div>
           </div>
 

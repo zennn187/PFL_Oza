@@ -10,25 +10,27 @@ import {
   FaTimesCircle,
   FaTicketAlt,
 } from "react-icons/fa";
-import Navbar from "../../components/Navbar";
+import { useAuth } from "../../context/useAuth";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const AVAILABLE_VOUCHERS = [
   {
     id: "VCH-01",
     title: "Gratis Ongkir Instan",
-    cost: 150,
+    cost: 80,
     description: "Tanpa minimum transaksi untuk seluruh paket katering.",
   },
   {
     id: "VCH-02",
     title: "Potongan Harga Rp 50.000",
-    cost: 350,
+    cost: 180,
     description: "Berlaku untuk pemesanan prasmanan atau buffet.",
   },
   {
     id: "VCH-03",
     title: "Free Premium Dessert Box",
-    cost: 200,
+    cost: 120,
     description: "Tambahan hidangan penutup manis di pesanan berikutnya.",
   },
 ];
@@ -61,6 +63,17 @@ const TIER_BENEFITS = [
 ];
 
 export default function LoyaltyPage({ authState = "guest", setAuthState }) {
+  const navigate = useNavigate();
+  const { user, profile } = useAuth();
+  const isLoggedIn = Boolean(user?.id);
+
+  const guardMemberAction = () => {
+    if (isLoggedIn) return true;
+    toast("Anda harus login terlebih dahulu", { description: "Klik login untuk melanjutkan akses fitur member." });
+    navigate("/login");
+    return false;
+  };
+
   const [points, setPoints] = useState(850);
   const [tier, setTier] = useState("Bronze");
   const [redeemCode, setRedeemCode] = useState("");
@@ -71,8 +84,9 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
   ]);
 
   useEffect(() => {
-    if (points <= 1000) setTier("Bronze");
-    else if (points <= 2000) setTier("Silver");
+    // Tier dibuat lebih realistis biar progress tidak terasa terlalu jauh
+    if (points <= 150) setTier("Bronze");
+    else if (points <= 300) setTier("Silver");
     else setTier("Gold");
   }, [points]);
 
@@ -82,17 +96,24 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
   };
 
   const handleSimulateTransaction = () => {
+    if (!guardMemberAction()) return;
+
     const today = new Date();
     const lastTxDate = transactions.length > 0 ? new Date(transactions[0].date) : today;
     const diffTime = Math.abs(today - lastTxDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const amount = 250000;
-    const basePointsGenerated = Math.floor(amount / 10000);
-    const multiplier = diffDays <= 3 && transactions.length > 0 ? 2 : 1;
-    const note = multiplier > 1 ? "Bonus Streak Transaksi Cepat" : "Transaksi Normal";
-    const finalPointsEarned = Math.floor(basePointsGenerated * multiplier);
 
-    setPoints((prev) => Math.min(prev + finalPointsEarned, 3000));
+    // Simulasi dibuat sederhana & terasa cepat:
+    // - Normal: +50 pts
+    // - Jika < 3 hari sejak transaksi sebelumnya: +100 pts (anggap sebagai 2x)
+    const amount = 250000;
+    const normalPts = 50;
+    const multiplier = diffDays <= 3 && transactions.length > 0 ? 2 : 1;
+    const finalPointsEarned = normalPts * multiplier;
+
+    const note = multiplier > 1 ? "Bonus Akumulasi Cepat" : "Simulasi Transaksi";
+
+    setPoints((prev) => Math.min(prev + finalPointsEarned, 500));
     setTransactions((prev) => [
       {
         id: `TX-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -109,21 +130,25 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
 
   const handleRedeemCode = (event) => {
     event.preventDefault();
+    if (!guardMemberAction()) return;
+
     if (redeemCode.trim().toUpperCase() === "ONCATERINGORANGE") {
-      setPoints((prev) => Math.min(prev + 250, 3000));
+      // Sesuaikan dengan sistem poin baru agar tidak terlalu jauh
+      setPoints((prev) => Math.min(prev + 40, 500));
       setRedeemCode("");
-      showFeedback("success", "Kode redeem berhasil! 250 poin ditambahkan.");
+      showFeedback("success", "Kode redeem berhasil! 40 poin ditambahkan.");
       return;
     }
     showFeedback("error", "Kode redeem salah atau sudah kedaluwarsa.");
   };
 
   const handleExchangeVoucher = (cost, title) => {
+    if (!guardMemberAction()) return;
     if (points < cost) {
       showFeedback("error", "Poin Anda belum cukup untuk menukar voucher ini.");
       return;
     }
-    setPoints((prev) => prev - cost);
+    setPoints((prev) => Math.max(0, prev - cost));
     showFeedback("success", `Voucher "${title}" berhasil ditukar!`);
   };
 
@@ -133,9 +158,13 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
   };
 
   const getProgressPercentage = () => {
-    if (tier === "Bronze") return Math.min((points / 1000) * 100, 100);
-    if (tier === "Silver") return Math.min(((points - 1000) / 1000) * 100, 100);
-    return Math.min(((points - 2000) / 1000) * 100, 100);
+    // Progress per segment tier:
+    // Bronze: 0-150
+    // Silver: 151-300
+    // Gold: 301-500
+    if (tier === "Bronze") return Math.min((points / 150) * 100, 100);
+    if (tier === "Silver") return Math.min(((points - 150) / 150) * 100, 100);
+    return Math.min(((points - 300) / 200) * 100, 100);
   };
 
   const TierIcon = tier === "Bronze" ? FaAward : tier === "Silver" ? FaGem : FaCrown;
@@ -147,17 +176,15 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-y-auto bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] text-[#1E293B] antialiased selection:bg-orange-500 selection:text-white">
-      <Navbar isAuthenticated={authState === "authenticated"} onLogout={handleLogout} />
-
+    <div className="w-full overflow-y-auto bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] text-[#1E293B] antialiased selection:bg-orange-500 selection:text-white">
       <AnimatePresence>
         {message.text && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9, transition: { duration: 0.2 } }}
-            className={`fixed right-5 bottom-5 z-50 flex items-center gap-3 rounded-2xl px-6 py-4 text-sm font-semibold text-white shadow-2xl backdrop-blur-md ${
-              message.type === "success" ? "bg-emerald-500/90 shadow-emerald-500/20" : "bg-rose-500/90 shadow-rose-500/20"
+            className={`fixed right-5 bottom-5 z-50 flex items-center gap-3 rounded-2xl px-6 py-4 text-sm font-semibold text-white shadow-xl backdrop-blur-md ${
+              message.type === "success" ? "bg-emerald-500/90 shadow-emerald-500/15" : "bg-rose-500/90 shadow-rose-500/15"
             }`}
           >
             {message.type === "success" ? <FaCheckCircle className="text-xl animate-bounce" /> : <FaTimesCircle className="text-xl" />}
@@ -166,54 +193,80 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
         )}
       </AnimatePresence>
 
-      <main className="mx-auto max-w-7xl px-6 pb-16 pt-36 md:px-8">
+      <main className="mx-auto max-w-7xl px-6 pb-16 pt-28 md:px-8">
         <div className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-          <div>
-            <h1 className="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-3xl font-black tracking-tight text-transparent md:text-4xl">
+          <div className="relative">
+            <div className="absolute -left-6 -top-3 h-12 w-12 rounded-3xl bg-orange-500/10 blur-xl" />
+            <h1 className="relative bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-3xl font-black tracking-tight text-transparent md:text-4xl">
               Loyalty & Keanggotaan Member
             </h1>
-            <p className="mt-2 text-sm text-slate-500 font-medium">
-              Makin sering pesan katering, makin tinggi tier dan benefit belanja yang didapat.
-            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <p className="text-sm text-slate-500 font-medium">
+                Makin sering pesan katering, makin tinggi tier dan benefit belanja yang didapat.
+              </p>
+
+              {!isLoggedIn && (
+                <span className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-orange-700 shadow-sm">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
+                  Preview
+                </span>
+              )}
+            </div>
           </div>
+
           <motion.button
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleSimulateTransaction}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-500/25 transition-all"
+            className="relative overflow-hidden flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#F97316] to-[#F43F5E] px-6 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#F97316]/15 transition-all"
           >
-            <FaExchangeAlt /> Simulasi Transaksi Cepat
+            <span className="absolute inset-0 bg-white/15 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700" />
+            <FaExchangeAlt className="relative z-10" /> Simulasi Transaksi Cepat
           </motion.button>
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
             
-            <motion.section 
+            <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className={`relative overflow-hidden rounded-[32px] bg-gradient-to-br ${getTierGradient()} p-8 text-white shadow-xl shadow-orange-900/10`}
             >
+              {/* glow */}
               <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
               <div className="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-black/10 blur-2xl" />
 
+              {/* Perbaikan UI: pattern dibuat lebih halus & minim agar tidak terkesan template generik */}
+              <div className="absolute inset-0 opacity-[0.05] bg-[radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:28px_28px]" />
+
               <div className="relative z-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/70">Status Akun Anda</span>
-                  <div className="mt-1 flex items-center gap-3">
-                    <h2 className="text-3xl font-black uppercase tracking-wide drop-shadow-sm">
-                      Member {tier}
-                    </h2>
-                    <motion.div 
-                      animate={{ y: [0, -4, 0] }} 
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white/70">
+                    Status Akun
+                  </span>
+
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="rounded-2xl bg-white/10 px-4 py-2 ring-1 ring-white/15 backdrop-blur-sm">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-white/70">Member</p>
+                      <h2 className="text-3xl font-black uppercase tracking-wide drop-shadow-sm leading-none">
+                        {tier}
+                      </h2>
+                    </div>
+
+                    <motion.div
+                      animate={{ y: [0, -4, 0] }}
                       transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                     >
                       <TierIcon className="text-3xl text-yellow-300 drop-shadow-[0_4px_6px_rgba(0,0,0,0.2)]" />
                     </motion.div>
                   </div>
                 </div>
+
                 <div className="sm:text-right">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/70">Total Poin Terkumpul</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
+                    Total Poin
+                  </p>
                   <p className="mt-1 text-4xl font-black tracking-tight text-yellow-300 drop-shadow-sm">
                     {points} <span className="text-xs font-bold text-white/80">pts</span>
                   </p>
@@ -233,15 +286,15 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
                 <div className="grid grid-cols-3 text-center text-[10px] font-black uppercase tracking-wider text-white/60">
                   <div className={`text-left ${tier === "Bronze" ? "text-yellow-300 font-black" : ""}`}>
                     <span>Bronze</span>
-                    <p className="text-[9px] opacity-80">0 - 1000 Pts</p>
+                    <p className="text-[9px] opacity-80">0 - 150 Pts</p>
                   </div>
                   <div className={`text-center ${tier === "Silver" ? "text-yellow-300 font-black" : ""}`}>
                     <span>Silver</span>
-                    <p className="text-[9px] opacity-80">1001 - 2000 Pts</p>
+                    <p className="text-[9px] opacity-80">151 - 300 Pts</p>
                   </div>
                   <div className={`text-right ${tier === "Gold" ? "text-yellow-300 font-black" : ""}`}>
                     <span>Gold</span>
-                    <p className="text-[9px] opacity-80">2001 - 3000 Pts</p>
+                    <p className="text-[9px] opacity-80">301 - 500 Pts</p>
                   </div>
                 </div>
               </div>
@@ -249,7 +302,7 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
               <div className="relative z-10 mt-8 flex items-start gap-3 rounded-2xl bg-white/10 p-4 text-xs backdrop-blur-md border border-white/10">
                 <FaAward className="mt-0.5 shrink-0 text-lg text-yellow-300" />
                 <p className="leading-relaxed font-medium text-white/90">
-                  <strong className="text-white font-bold">Sistem Booster Frekuensi Aktif:</strong> Transaksi katering berikutnya dalam waktu kurang dari 3 hari dari pesanan terakhir otomatis dapat multiplier <span className="text-yellow-300 font-bold">2x poin</span>.
+                  <strong className="text-white font-bold">Booster Cepat:</strong> transaksi berikutnya dalam <span className="text-yellow-300 font-bold">≤ 3 hari</span> dapat <span className="text-yellow-300 font-bold">2x</span> poin (simulasi).
                 </p>
               </div>
             </motion.section>
@@ -292,33 +345,54 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
             </section>
 
             <section className="rounded-[32px] border border-slate-100 bg-white p-6 shadow-sm">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-500">
-                <FaHistory className="text-orange-500" /> Riwayat Transaksi Penambahan Poin
-              </h3>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <h3 className="flex items-center gap-2 text-sm font-bold text-slate-500">
+                  <FaHistory className="text-orange-500" /> Riwayat Poin
+                </h3>
+
+                <span className="rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  Terbaru
+                </span>
+              </div>
+
               <div className="max-h-52 divide-y divide-slate-100 overflow-y-auto pr-2 scrollbar-thin">
-                <AnimatePresence initial={false}>
-                  {transactions.map((transaction) => (
-                    <motion.div
-                      key={transaction.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-between py-3.5 text-xs transition-colors hover:bg-slate-50/50 px-2 rounded-xl"
-                    >
-                      <div>
-                        <p className="font-bold text-slate-800">
-                          {transaction.id} — <span className="text-slate-500">Rp {transaction.amount.toLocaleString("id-ID")}</span>
-                        </p>
-                        <p className="mt-1 text-[10px] font-medium text-slate-400">
-                          {transaction.date} • <span className="font-semibold text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded-md">{transaction.note}</span>
-                        </p>
-                      </div>
-                      <span className="rounded-xl bg-emerald-50 px-3 py-1.5 font-extrabold text-emerald-600 border border-emerald-100 shadow-sm">
-                        +{transaction.basePoints} Pts
-                      </span>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                {transactions.length === 0 ? (
+                  <div className="flex h-40 items-center justify-center text-center px-4">
+                    <p className="text-xs font-semibold text-slate-400">
+                      Belum ada transaksi simulasi.
+                    </p>
+                  </div>
+                ) : (
+                  <AnimatePresence initial={false}>
+                    {transactions.map((transaction) => (
+                      <motion.div
+                        key={transaction.id}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="flex items-center justify-between py-3.5 text-xs transition-colors hover:bg-slate-50/50 px-2 rounded-xl"
+                      >
+                        <div>
+                          <p className="font-bold text-slate-800">
+                            {transaction.id} —{" "}
+                            <span className="text-slate-500">
+                              Rp {transaction.amount.toLocaleString("id-ID")}
+                            </span>
+                          </p>
+                          <p className="mt-1 text-[10px] font-medium text-slate-400">
+                            {transaction.date} •{" "}
+                            <span className="font-semibold text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded-md">
+                              {transaction.note}
+                            </span>
+                          </p>
+                        </div>
+                        <span className="rounded-xl bg-emerald-50 px-3 py-1.5 font-extrabold text-emerald-600 border border-emerald-100 shadow-sm">
+                          +{transaction.basePoints} Pts
+                        </span>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                )}
               </div>
             </section>
           </div>

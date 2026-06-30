@@ -1,4 +1,31 @@
+import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
+
 export default function Forgot() {
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        setMessage("");
+        setError("");
+
+        try {
+            const redirectTo = `${window.location.origin}/login`;
+            const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+
+            if (resetError) throw resetError;
+            setMessage("Link reset password sudah dikirim. Silakan cek email Anda.");
+        } catch (err) {
+            setError(err.message || "Gagal mengirim link reset password.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
             <h2 className="text-2xl font-semibold text-gray-700 mb-2 text-center">
@@ -10,7 +37,19 @@ export default function Forgot() {
                 password.
             </p>
 
-            <form>
+            {message && (
+                <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                    {message}
+                </div>
+            )}
+
+            {error && (
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {error}
+                </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
                 <div className="mb-5">
                     <label
                         htmlFor="email"
@@ -21,19 +60,22 @@ export default function Forgot() {
                     <input
                         type="email"
                         id="email"
-                        className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm
-                            placeholder-gray-400"
+                        required
+                        disabled={loading}
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400"
                         placeholder="you@example.com"
                     />
                 </div>
                 <button
                     type="submit"
-                    className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4
-                        rounded-lg transition duration-300"
+                    disabled={loading}
+                    className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
                 >
-                    Send Reset Link
+                    {loading ? "Sending..." : "Send Reset Link"}
                 </button>
             </form>
         </div>
-    )
+    );
 }

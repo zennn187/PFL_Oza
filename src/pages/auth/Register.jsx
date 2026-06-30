@@ -4,7 +4,7 @@ import { BsFillExclamationDiamondFill } from "react-icons/bs";
 import { ImSpinner2 } from "react-icons/im";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { userAPI } from "../../services/userAPI";
+import { useAuth } from "../../context/useAuth";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -17,8 +17,9 @@ export default function Register() {
         email: "",
         phone: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
     });
+    const { signUp } = useAuth();
 
     const handleChange = (evt) => {
         const { name, value } = evt.target;
@@ -43,19 +44,13 @@ export default function Register() {
         const fullName = `${dataForm.firstName} ${dataForm.lastName}`.trim();
 
         try {
-            await userAPI.registerUser({
-                customerName: fullName,
-                email: dataForm.email,
-                phone: dataForm.phone,
-                password: dataForm.password
-            });
-
+            await signUp(dataForm.email, dataForm.password, fullName, dataForm.phone);
             setSuccess("Registrasi akun berhasil! Silakan masuk.");
             setTimeout(() => {
                 navigate("/login");
             }, 2500);
         } catch (err) {
-            setError(err.message);
+            setError(err.message || "Registrasi gagal, silakan coba lagi.");
         } finally {
             setLoading(false);
         }
@@ -185,7 +180,6 @@ export default function Register() {
                         <SocialIcon icon={<FaInstagram size={22} className="text-[#E1306C]" />} />
                         <SocialIcon icon={<FaLinkedin size={22} className="text-[#0077b5]" />} />
                     </div>
-                    
                     <p className="text-[#0D1B3E] font-medium text-sm md:text-base">
                         Already have an Account? <Link to="/login" className="text-[#F97316] hover:underline font-semibold">Sign in</Link>
                     </p>

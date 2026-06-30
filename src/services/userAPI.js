@@ -1,59 +1,43 @@
-import axios from 'axios';
+import { supabase } from "../lib/supabaseClient";
 
-const BASE_URL = "https://lhageigjdpvfjjfshfae.supabase.co/rest/v1";
-const API_KEY = "sb_publishable_l6KTL_GyvbAlQjBh9LZsbA_NsEk2Vnd";
-
-const headers = {
-    apikey: API_KEY,
-    Authorization: `Bearer ${API_KEY}`,
-    "Content-Type": "application/json",
-    "Prefer": "return=representation"
-};
-
-const USERS_URL = `${BASE_URL}/users`;
-const CUSTOMERS_URL = `${BASE_URL}/customers`;
+const normalizeCustomer = (profile) => ({
+    id: profile.id,
+    customerName: profile.nama_lengkap,
+    email: profile.email,
+    phone: profile.no_telepon || "-",
+    loyalty: profile.member_points?.[0]?.tier
+        ? profile.member_points[0].tier.charAt(0).toUpperCase() + profile.member_points[0].tier.slice(1)
+        : "Bronze",
+});
 
 export const userAPI = {
-    async registerUser(userData) {
-        const checkEmail = await axios.get(`${USERS_URL}?email=eq.${userData.email}`, { headers });
-        if (checkEmail.data.length > 0) {
-            throw new Error("Email sudah terdaftar");
-        }
-
-        const response = await axios.post(USERS_URL, userData, { headers });
-        return response.data;
-    },
-
-    async loginUser(credential, password) {
-        const response = await axios.get(`${USERS_URL}?email=eq.${credential}&password=eq.${password}`, { headers });
-        if (response.data.length === 0) {
-            throw new Error("Email atau password salah");
-        }
-        return response.data[0];
-    },
-
-    async getAllUsers() {
-        const response = await axios.get(USERS_URL, { headers });
-        return response.data;
-    },
-
-    async updateUser(id, userData) {
-        const response = await axios.patch(`${USERS_URL}?id=eq.${id}`, userData, { headers });
-        return response.data;
-    },
-
-    async deleteUser(id) {
-        const response = await axios.delete(`${USERS_URL}?id=eq.${id}`, { headers });
-        return response.data;
-    },
-
     async getAllCustomers() {
-        const response = await axios.get(`${CUSTOMERS_URL}?order=created_at.desc`, { headers });
-        return response.data;
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("id, nama_lengkap, email, no_telepon, role, member_points(tier)")
+            .eq("role", "member")
+            .is("deleted_at", null)
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return (data || []).map(normalizeCustomer);
     },
 
     async createCustomer(customerData) {
-        const response = await axios.post(CUSTOMERS_URL, customerData, { headers });
-        return response.data;
-    }
+        const { data, error } = await supabase
+            .from("profiles")
+            .insert([
+                {
+                    nama_lengkap: customerData.customerName,
+                    email: customerData.email,
+                    no_telepon: customerData.phone,
+                    role: "member",
+                },
+            ])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return normalizeCustomer({ ...data, member_points: [{ tier: customerData.loyalty?.toLowerCase() || "bronze" }] });
+    },
 };

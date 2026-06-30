@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../../lib/supabaseClient";
+import { tentukanTier } from "../../lib/pointUtils";
 import {
   Users,
   Search,
@@ -12,6 +13,8 @@ import {
   TrendingUp,
   RefreshCw,
 } from "lucide-react";
+
+const MotionDiv = motion.div;
 
 export default function LoyaltyAdmin() {
   const [members, setMembers] = useState([]);
@@ -26,7 +29,7 @@ export default function LoyaltyAdmin() {
       .channel("realtime-loyalty")
       .on(
         "postgres_changes",
-        { event: "*", scheme: "public", table: "loyalty_members" },
+        { event: "*", schema: "public", table: "member_points" },
         () => {
           fetchMembers(); 
         }
@@ -42,41 +45,58 @@ export default function LoyaltyAdmin() {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from("loyalty_members")
-        .select("*")
-        .order("id", { ascending: true });
+        .from("profiles")
+        .select("id, nama_lengkap, email, created_at, member_points(total_points, lifetime_points, tier)")
+        .eq("role", "member")
+        .is("deleted_at", null)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setMembers(data || []);
+      setMembers((data || []).map((profile) => ({
+        id: profile.id,
+        name: profile.nama_lengkap,
+        email: profile.email,
+        join_date: new Date(profile.created_at).toLocaleDateString("id-ID"),
+        points: profile.member_points?.[0]?.total_points || 0,
+        lifetimePoints: profile.member_points?.[0]?.lifetime_points || 0,
+        tier: profile.member_points?.[0]?.tier || "bronze",
+        status: "Normal",
+      })));
     } catch (error) {
-      console.error(error.message);
+      alert("Gagal memuat loyalty member: " + error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateTier = (points) => {
-    if (points >= 2000) return "Gold";
-    if (points >= 1000) return "Silver";
-    return "Bronze";
-  };
-
   const handleDowngradePoints = async (id, currentPoints, memberName) => {
     const updatedPoints = Math.max(0, currentPoints - 2000);
-    const updatedTier = calculateTier(updatedPoints);
 
     try {
-      const { error } = await supabase
-        .from("loyalty_members")
+      const member = members.find((item) => item.id === id);
+      const stableTier = tentukanTier(member?.lifetimePoints || 0);
+      const { error: pointError } = await supabase
+        .from("member_points")
         .update({
-          points: updatedPoints,
-          tier: updatedTier,
-          status: "Penalized",
+          total_points: updatedPoints,
+          tier: stableTier,
         })
-        .eq("id", id);
+        .eq("user_id", id);
 
-      if (error) throw error;
+      if (pointError) throw pointError;
+
+      const { error: logError } = await supabase.from("point_transactions").insert([
+        {
+          user_id: id,
+          jumlah_poin: 2000,
+          jenis: "debit",
+          keterangan: "Sanksi pengurangan poin dari admin loyalty",
+        },
+      ]);
+
+      if (logError) throw logError;
       triggerLog(`Poin member "${memberName}" berhasil dipotong -2000 Poin.`);
+      fetchMembers();
     } catch (error) {
       alert(error.message);
     }
@@ -86,12 +106,13 @@ export default function LoyaltyAdmin() {
     if (window.confirm(`Apakah Anda yakin ingin menghapus keanggotaan loyalty "${memberName}"?`)) {
       try {
         const { error } = await supabase
-          .from("loyalty_members")
-          .delete()
+          .from("profiles")
+          .update({ deleted_at: new Date().toISOString() })
           .eq("id", id);
 
         if (error) throw error;
-        triggerLog(`Loyalty Member "${memberName}" telah dihapus secara permanen.`);
+        triggerLog(`Loyalty Member "${memberName}" telah dinonaktifkan.`);
+        fetchMembers();
       } catch (error) {
         alert(error.message);
       }
@@ -105,8 +126,8 @@ export default function LoyaltyAdmin() {
 
   const filteredMembers = members.filter(
     (m) =>
-      m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (m.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (m.email || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -114,7 +135,7 @@ export default function LoyaltyAdmin() {
       
       <AnimatePresence>
         {logMessage && (
-          <motion.div 
+          <MotionDiv 
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -122,7 +143,7 @@ export default function LoyaltyAdmin() {
           >
             <CheckCircle className="text-white w-5 h-5 shrink-0" />
             <span>{logMessage}</span>
-          </motion.div>
+          </MotionDiv>
         )}
       </AnimatePresence>
 
@@ -151,14 +172,14 @@ export default function LoyaltyAdmin() {
             <div className="p-3 bg-amber-50 text-amber-600 rounded-xl"><AlertTriangle className="w-6 h-6 animate-pulse" /></div>
             <div className="text-left">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Terindikasi Curang</p>
-              <p className="text-2xl font-black text-amber-600">{members.filter((m) => m.status === "Suspicious").length} Akun</p>
+              <p className="text-2xl font-black text-amber-600">{members.filter((m) => m.points < 0).length} Akun</p>
             </div>
           </div>
           <div className="bg-white p-6 rounded-[24px] border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="p-3 bg-rose-50 text-rose-600 rounded-xl"><TrendingUp className="w-6 h-6" /></div>
             <div className="text-left">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Sanksi Aktif</p>
-              <p className="text-2xl font-black text-rose-600">{members.filter((m) => m.status === "Penalized").length} Kasus</p>
+              <p className="text-2xl font-black text-rose-600">{members.filter((m) => m.points === 0).length} Kasus</p>
             </div>
           </div>
         </div>
@@ -204,11 +225,12 @@ export default function LoyaltyAdmin() {
                       <p className="text-[11px] text-slate-400 font-medium mt-0.5">{member.email}</p>
                     </td>
                     <td className="p-4 font-semibold text-slate-500">{member.join_date}</td>
-                    <td className="p-4 font-black text-slate-900">{member.points.toLocaleString()} <span className="text-[10px] text-slate-400 font-bold">Pts</span></td>
+                    <td className="p-4 font-black text-slate-900">{member.points.toLocaleString("id-ID")} <span className="text-[10px] text-slate-400 font-bold">Pts</span></td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wide ${
-                        member.tier === "Gold" ? "bg-amber-50 text-amber-700 border border-amber-100" :
-                        member.tier === "Silver" ? "bg-slate-100 text-slate-700 border border-slate-200" : "bg-orange-50 text-orange-700 border border-orange-100"
+                        member.tier === "gold" ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                        member.tier === "silver" ? "bg-slate-100 text-slate-700 border border-slate-200" :
+                        member.tier === "platinum" ? "bg-cyan-50 text-cyan-700 border border-cyan-100" : "bg-orange-50 text-orange-700 border border-orange-100"
                       }`}>
                         {member.tier}
                       </span>

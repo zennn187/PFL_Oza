@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { ArrowLeft, CheckCircle2, ShieldCheck, Wallet, Landmark, CreditCard, QrCode, RefreshCw } from "lucide-react";
-// Impor Supabase Client Default yang sudah kita perbaiki di atas
-import supabaseClient from "../../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../../context/useAuth";
 
 export default function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Ekstrak data keranjang belanja yang dikirimkan via router push state
   const { cartItems = [], totalPrice = 0 } = location.state || {};
@@ -17,6 +18,7 @@ export default function Checkout() {
   const [orderStatus, setOrderStatus] = useState("Unpaid");
   const [isCreated, setIsCreated] = useState(false);
   const [invoiceId, setInvoiceId] = useState("");
+  const [orderId, setOrderId] = useState("");
   const [isSyncing, setIsSyncing] = useState(false);
 
   // Jika halaman checkout diakses tanpa membawa data produk, kembalikan ke beranda
@@ -34,28 +36,72 @@ export default function Checkout() {
     }).format(amount);
   };
 
+  const parsePrice = (value) => {
+    if (typeof value === "number") return value;
+    return Number(String(value || "").replace(/[^0-9]/g, "")) || 0;
+  };
+
   const handleProcessOrder = async () => {
     if (!address.trim()) {
       alert("Silakan masukkan alamat pengiriman terlebih dahulu.");
       return;
     }
+    if (!user?.id) {
+      alert("Silakan login terlebih dahulu sebelum checkout.");
+      navigate("/login");
+      return;
+    }
+
     const generatedInvoice = "ONC-" + Math.floor(100000 + Math.random() * 900000);
-    setInvoiceId(generatedInvoice);
-    setIsCreated(true);
 
     try {
-      // Menyimpan record pesanan ke dalam tabel 'orders' Supabase Database Anda
-      await supabaseClient.from("orders").insert([
-        {
-          id: generatedInvoice,
-          total_price: totalPrice,
-          delivery_address: address,
-          payment_type: paymentMethod,
-          status: "Pending"
+      const pendingItems = cartItems.map((item) => {
+        const productId = item.product_id || item.id;
+        if (!productId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(productId))) {
+          throw new Error("Produk checkout harus berasal dari tabel products Supabase agar product_id UUID tersedia.");
         }
-      ]);
+
+        const price = parsePrice(item.harga ?? item.price);
+        const quantity = Number(item.quantity ?? item.qty) || 1;
+        const name = item.nama ?? item.name ?? "Produk";
+
+        return { productId, price, quantity, name };
+      });
+
+      const { data: newOrder, error: orderError } = await supabase
+        .from("orders")
+        .insert([
+          {
+            nomor_pesanan: generatedInvoice,
+            user_id: user.id,
+            status: "pending",
+            total_harga: totalPrice,
+            alamat_pengiriman: address,
+            catatan: `Metode pembayaran: ${paymentMethod}`,
+          },
+        ])
+        .select("id, nomor_pesanan")
+        .single();
+
+      if (orderError) throw orderError;
+
+      const itemsToInsert = pendingItems.map((item) => ({
+          order_id: newOrder.id,
+          product_id: item.productId,
+          nama_produk: item.name,
+          harga_satuan: item.price,
+          quantity: item.quantity,
+          subtotal: item.price * item.quantity,
+      }));
+
+      const { error: itemError } = await supabase.from("order_items").insert(itemsToInsert);
+      if (itemError) throw itemError;
+
+      setInvoiceId(newOrder.nomor_pesanan);
+      setOrderId(newOrder.id);
+      setIsCreated(true);
     } catch (err) {
-      console.error("Gagal mengirim pesanan ke Supabase:", err);
+      alert("Gagal mengirim pesanan ke Supabase: " + (err.message || err));
     }
   };
 
@@ -66,9 +112,10 @@ export default function Checkout() {
       setOrderStatus("Paid");
       setIsSyncing(false);
       try {
-        await supabaseClient.from("orders").update({ status: "Paid" }).eq("id", invoiceId);
+        const { error } = await supabase.from("orders").update({ status: "processing" }).eq("id", orderId);
+        if (error) throw error;
       } catch (err) {
-        console.error("Gagal mengupdate status transaksi:", err);
+        alert("Gagal mengupdate status transaksi: " + (err.message || err));
       }
     }, 1200);
   };
@@ -211,13 +258,13 @@ export default function Checkout() {
             <h2 className="text-lg font-black text-slate-950 mb-4">Ringkasan Pesanan</h2>
             <div className="divide-y divide-slate-100 max-h-[240px] overflow-y-auto pr-1">
               {cartItems.map((item) => (
-                <div key={item.name} className="py-3 flex justify-between items-center text-sm">
+                <div key={item.id || item.name} className="py-3 flex justify-between items-center text-sm">
                   <div>
-                    <h4 className="font-black text-slate-800 truncate max-w-[180px]">{item.name}</h4>
-                    <p className="text-slate-400 text-xs font-semibold">{item.qty} item x {formatRupiah(item.price)}</p>
+                    <h4 className="font-black text-slate-800 truncate max-w-[180px]">{item.nama || item.name}</h4>
+                    <p className="text-slate-400 text-xs font-semibold">{item.quantity || item.qty} item x {formatRupiah(parsePrice(item.harga ?? item.price))}</p>
                   </div>
                   <span className="font-black text-slate-700">
-                    {formatRupiah(item.price * item.qty)}
+                    {formatRupiah(parsePrice(item.harga ?? item.price) * (Number(item.quantity ?? item.qty) || 1))}
                   </span>
                 </div>
               ))}

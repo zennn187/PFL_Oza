@@ -1,9 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://lhageigjdpvfjjfshfae.supabase.co/rest/v1/';
-const supabaseAnonKey = 'sb_publishable_l6KTL_GyvbAlQjBh9LZsbA_NsEk2Vnd...'; // Sesuaikan dengan key aslimu
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.replace(/\/rest\/v1\/?$/, '');
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase environment variables are missing! Check your .env file.');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Tambahkan baris ini di paling bawah agar default import bekerja dengan lancar
 export default supabase;

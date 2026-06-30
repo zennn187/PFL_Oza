@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { BsFillExclamationDiamondFill } from "react-icons/bs";
 import { ImSpinner2 } from "react-icons/im";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { userAPI } from "../../services/userAPI";
+import { useAuth } from "../../context/useAuth";
 
-export default function Login({ setAuthState }) {
+export default function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const checkoutState = location.state?.checkout;
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [dataForm, setDataForm] = useState({
         credential: "",
         password: "",
     });
+    const { signIn } = useAuth();
 
     const handleChange = (evt) => {
         const { name, value } = evt.target;
@@ -29,17 +32,15 @@ export default function Login({ setAuthState }) {
         setError("");
 
         try {
-            const user = await userAPI.loginUser(dataForm.credential, dataForm.password);
-            localStorage.setItem("user_session", JSON.stringify(user));
-            
-            // Mengubah state global agar rute dashboard terbuka
-            if (typeof setAuthState === "function") {
-                setAuthState("authenticated");
+            await signIn(dataForm.credential, dataForm.password);
+
+            if (checkoutState?.cartItems && typeof checkoutState?.totalPrice === "number") {
+                navigate("/checkout", { state: checkoutState });
+            } else {
+                navigate("/dashboard");
             }
-            
-            navigate("/dashboard");
         } catch (err) {
-            setError(err.message);
+            setError(err.message || 'Login gagal, silakan coba lagi.');
         } finally {
             setLoading(false);
         }

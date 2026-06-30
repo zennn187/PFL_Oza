@@ -1,0 +1,6 @@
+- [x] Update `src/pages/guest/LandingPage.jsx`: gate checkout untuk guest (toast + redirect) dengan state checkout
+- [x] Update `src/pages/auth/Login.jsx`: redirect kembali ke `/checkout` jika ada state checkout
+- [ ] Fix build issue: pastikan `toast` di `LandingPage.jsx` di-import dari `sonner`
+- [ ] Tambahkan koneksi “Menu Populer (Banyak dipesan) → Checkout” via CTA yang sama (login-gated)
+- [ ] Pastikan tombol-tombol “My Cart → Checkout” dan CTA “Menu Populer → Checkout” bekerja tanpa redirect salah
+- [ ] Jalankan critical-path testing setelah perubahan

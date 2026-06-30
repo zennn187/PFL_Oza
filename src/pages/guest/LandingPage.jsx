@@ -722,12 +722,26 @@ export default function LandingPage({ authState, setAuthState }) {
                       </div>
                     </div>
 
-                    <button 
-                      onClick={() => cartItems.length > 0 && navigate("/checkout")}
+                    <button
+                      onClick={() => {
+                        if (cartItems.length === 0) return;
+
+                        if (authState === "guest") {
+                          toast.info("Silakan login dulu untuk melanjutkan checkout.");
+                          navigate("/login", {
+                            state: { checkout: { cartItems, totalPrice } },
+                          });
+                          return;
+                        }
+
+                        navigate("/checkout", {
+                          state: { cartItems, totalPrice },
+                        });
+                      }}
                       disabled={cartItems.length === 0}
                       className={`flex w-full items-center justify-center gap-2 rounded-full py-4 text-sm font-black text-white shadow-lg transition-all duration-300 group ${
-                        cartItems.length > 0 
-                          ? "bg-orange-600 shadow-orange-600/20 hover:bg-slate-950 hover:shadow-xl active:scale-98 cursor-pointer" 
+                        cartItems.length > 0
+                          ? "bg-orange-600 shadow-orange-600/20 hover:bg-slate-950 hover:shadow-xl active:scale-98 cursor-pointer"
                           : "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
                       }`}
                     >
