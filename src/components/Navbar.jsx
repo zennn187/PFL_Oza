@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaSearch } from "react-icons/fa";
 import { MdNotifications, MdMail, MdCardGiftcard, MdSettings } from "react-icons/md";
 
-export default function Navbar({ isAuthenticated, userRole = "Admin Utama", userName = "Oza Okta", onLogout }) {
+export default function Navbar({ 
+  isAuthenticated, 
+  userRole = "Admin Utama", 
+  userName = "Oza Okta", 
+  onLogout,
+  variant = "admin" // "admin" or "landing"
+}) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -25,7 +31,8 @@ export default function Navbar({ isAuthenticated, userRole = "Admin Utama", user
     }, 100);
   };
 
-  if (isAuthenticated) {
+  // ====== ADMIN HEADER ======
+  if (isAuthenticated && variant === "admin") {
     return (
       <header className="w-full bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between sticky top-0 z-40 font-sans">
         <div className="relative w-72 hidden sm:block">
@@ -78,6 +85,51 @@ export default function Navbar({ isAuthenticated, userRole = "Admin Utama", user
     );
   }
 
+  // ====== MEMBER LANDING NAVBAR (logged in but still on landing page) ======
+  if (isAuthenticated && variant === "landing") {
+    return (
+      <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 fixed top-0 left-0 z-50 px-8 py-4 flex justify-between items-center font-sans">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
+          <h1 className="text-2xl font-serif font-bold text-[#0D1B3E]">
+            On-Catering<span className="text-[#F97316]">.</span>
+          </h1>
+        </div>
+
+        <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-[#F97316] transition-colors">Home</button>
+          <button onClick={() => scrollToSection("menu-category")} className="hover:text-[#F97316] transition-colors">Menu Category</button>
+          <button onClick={() => scrollToSection("trending-orders")} className="hover:text-[#F97316] transition-colors">Trending Orders</button>
+          <button onClick={() => navigate("/member")} className="hover:text-[#F97316] transition-colors">Loyalty</button>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate("/profil-katering")}>
+            <div className="text-right hidden md:block">
+              <p className="text-xs font-bold text-gray-800 group-hover:text-[#F97316] transition-colors">{userName || "Member"}</p>
+              <p className="text-[10px] text-gray-400 font-medium">Member</p>
+            </div>
+            <div className="w-9 h-9 rounded-full bg-orange-500 text-white font-bold text-xs flex items-center justify-center shadow-sm shadow-orange-500/20">
+              {(userName || "Member")
+                .split(" ")
+                .map((part) => part[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </div>
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm transition-all flex items-center gap-2 font-bold"
+          >
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
+      </nav>
+    );
+  }
+
+  // ====== GUEST NAVBAR (default, not authenticated) ======
   return (
     <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 fixed top-0 left-0 z-50 px-8 py-4 flex justify-between items-center font-sans">
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>

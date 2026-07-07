@@ -115,11 +115,11 @@ function DataPelanggan() {
   const getCustomerBadge = (frequencyStr) => {
     const freq = parseInt(frequencyStr) || 0;
     if (freq >= 12) {
-      return <span className="bg-purple-50 text-purple-600 text-xs font-semibold px-2.5 py-1 rounded-md">VIP / Loyal</span>;
+      return <span className="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-md border border-amber-100">Gold</span>;
     } else if (freq >= 6) {
-      return <span className="bg-blue-50 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-md">Regular</span>;
+      return <span className="bg-gray-100 text-gray-700 text-xs font-bold px-2.5 py-1 rounded-md border border-gray-200">Silver</span>;
     } else {
-      return <span className="bg-gray-50 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-md">New Customer</span>;
+      return <span className="bg-orange-50 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-md border border-orange-100">Bronze</span>;
     }
   };
 

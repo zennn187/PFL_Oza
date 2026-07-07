@@ -34,10 +34,14 @@ export default function Login() {
         try {
             await signIn(dataForm.credential, dataForm.password);
 
+            // Redirect ke halaman utama setelah login
+            // App.jsx akan otomatis mengarahkan:
+            // - Admin → /dashboard
+            // - Member → tetap di LandingPage
             if (checkoutState?.cartItems && typeof checkoutState?.totalPrice === "number") {
                 navigate("/checkout", { state: checkoutState });
             } else {
-                navigate("/dashboard");
+                navigate("/");
             }
         } catch (err) {
             setError(err.message || 'Login gagal, silakan coba lagi.');
@@ -60,8 +64,9 @@ export default function Login() {
 
             <form onSubmit={handleSubmit} className="w-full max-w-md text-left">
                 <div className="mb-5">
-                    <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Email</label>
+                    <label htmlFor="login-email" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Email</label>
                     <input
+                        id="login-email"
                         type="text"
                         name="credential"
                         required
@@ -72,8 +77,9 @@ export default function Login() {
                 </div>
                 
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Password</label>
+                    <label htmlFor="login-password" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Password</label>
                     <input
+                        id="login-password"
                         type="password"
                         name="password"
                         required
@@ -84,8 +90,8 @@ export default function Login() {
                 </div>
 
                 <div className="flex items-center justify-between mb-10">
-                    <label className="flex items-center text-sm text-[#9CA3AF] cursor-pointer">
-                        <input type="checkbox" className="w-4 h-4 mr-2 border-gray-300 rounded" />
+                    <label htmlFor="remember-me" className="flex items-center text-sm text-[#9CA3AF] cursor-pointer">
+                        <input id="remember-me" type="checkbox" className="w-4 h-4 mr-2 border-gray-300 rounded" />
                         Remember me?
                     </label>
                     <Link to="/forgot" className="text-sm text-[#F97316] font-medium hover:underline">

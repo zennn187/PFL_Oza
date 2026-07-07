@@ -77,8 +77,9 @@ export default function Register() {
             <form onSubmit={handleSubmit} className="w-full max-w-2xl text-left">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                     <div>
-                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">First Name</label>
+                        <label htmlFor="reg-firstname" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">First Name</label>
                         <input
+                            id="reg-firstname"
                             type="text"
                             name="firstName"
                             required
@@ -89,8 +90,9 @@ export default function Register() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Last Name</label>
+                        <label htmlFor="reg-lastname" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Last Name</label>
                         <input
+                            id="reg-lastname"
                             type="text"
                             name="lastName"
                             required
@@ -104,8 +106,9 @@ export default function Register() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                     <div>
-                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Email</label>
+                        <label htmlFor="reg-email" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Email</label>
                         <input
+                            id="reg-email"
                             type="email"
                             name="email"
                             required
@@ -116,8 +119,9 @@ export default function Register() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Phone No.</label>
+                        <label htmlFor="reg-phone" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Phone No.</label>
                         <input
+                            id="reg-phone"
                             type="text"
                             name="phone"
                             disabled={loading}
@@ -130,8 +134,9 @@ export default function Register() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                     <div>
-                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Password</label>
+                        <label htmlFor="reg-password" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Password</label>
                         <input
+                            id="reg-password"
                             type="password"
                             name="password"
                             required
@@ -142,8 +147,9 @@ export default function Register() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Confirm password</label>
+                        <label htmlFor="reg-confirm-password" className="block text-sm font-medium text-[#9CA3AF] mb-2 ml-1">Confirm password</label>
                         <input
+                            id="reg-confirm-password"
                             type="password"
                             name="confirmPassword"
                             required
@@ -156,8 +162,8 @@ export default function Register() {
                 </div>
 
                 <div className="flex justify-center items-center mb-8">
-                    <label className="flex items-center text-sm text-[#9CA3AF] cursor-pointer">
-                        <input type="checkbox" required className="w-4 h-4 mr-2 border-gray-300 rounded" />
+                    <label htmlFor="reg-terms" className="flex items-center text-sm text-[#9CA3AF] cursor-pointer">
+                        <input id="reg-terms" type="checkbox" required className="w-4 h-4 mr-2 border-gray-300 rounded" />
                         I agree with the terms of use
                     </label>
                 </div>

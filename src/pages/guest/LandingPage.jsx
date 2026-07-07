@@ -31,6 +31,7 @@ import heroSlideGrazingTable from "../../assets/hero_slide_grazing_table.jpg";
 import heroSlideLoungeDining from "../../assets/hero_slide_lounge_dining.jpg";
 import heroSlideSeafoodPlatter from "../../assets/hero_slide_seafood_platter.jpg";
 import { useCart } from "../../lib/CartContext";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const heroSlides = [
@@ -98,7 +99,7 @@ function ScrollReveal({ children, delay = 0 }) {
   );
 }
 
-export default function LandingPage({ authState, setAuthState }) {
+export default function LandingPage({ authState, setAuthState, profile, onLogout }) {
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const { cartItems, totalPrice, addToCart, removeFromCart } = useCart();
   const navigate = useNavigate();
@@ -201,8 +202,12 @@ export default function LandingPage({ authState, setAuthState }) {
   ];
 
   const handleLogoutAction = () => {
-    localStorage.removeItem("user_session");
-    setAuthState("guest");
+    if (onLogout) {
+      onLogout();
+    } else {
+      localStorage.removeItem("user_session");
+      if (setAuthState) setAuthState("guest");
+    }
   };
 
   const showPreviousHeroSlide = () => {
@@ -298,6 +303,8 @@ export default function LandingPage({ authState, setAuthState }) {
       <Navbar
         isAuthenticated={authState === "authenticated"}
         onLogout={handleLogoutAction}
+        variant={authState === "authenticated" ? "landing" : "guest"}
+        userName={profile?.nama_lengkap}
       />
 
       <main>
@@ -726,16 +733,23 @@ export default function LandingPage({ authState, setAuthState }) {
                       onClick={() => {
                         if (cartItems.length === 0) return;
 
+                        // Buat salinan cartItems tanpa fungsi/komponen React
+                        const safeCartItems = cartItems.map(item => ({
+                          name: item.name,
+                          price: item.price,
+                          qty: item.qty,
+                        }));
+
                         if (authState === "guest") {
                           toast.info("Silakan login dulu untuk melanjutkan checkout.");
                           navigate("/login", {
-                            state: { checkout: { cartItems, totalPrice } },
+                            state: { checkout: { cartItems: safeCartItems, totalPrice } },
                           });
                           return;
                         }
 
                         navigate("/checkout", {
-                          state: { cartItems, totalPrice },
+                          state: { cartItems: safeCartItems, totalPrice },
                         });
                       }}
                       disabled={cartItems.length === 0}

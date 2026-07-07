@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 import {
   FaShoppingCart,
   FaCheckCircle,
@@ -51,10 +53,17 @@ function ScrollReveal({ children, delay = 0 }) {
 }
 
 export default function AdminDashboard() {
+  const { profile, loading } = useAuth();
+  const navigate = useNavigate();
   const [counts, setCounts] = useState({ pending: 0, completed: 0, cancelled: 0, totalRevenue: 0 });
   const [recentOrders, setRecentOrders] = useState([]);
 
   useEffect(() => {
+    // Redirect member to landing page
+    if (!loading && profile && profile.role !== "admin") {
+      navigate("/", { replace: true });
+      return;
+    }
     const sortedOrders = [...ordersData]
       .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
       .slice(0, 5)
@@ -71,7 +80,7 @@ export default function AdminDashboard() {
     const revenueT = ordersData.reduce((sum, o) => sum + o.totalPrice, 0);
 
     setCounts({ pending: pendingT, completed: completedT, cancelled: cancelledT, totalRevenue: revenueT });
-  }, []);
+  }, [loading, profile, navigate]);
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#232D42] pb-10 pt-6 selection:bg-orange-500 selection:text-white">

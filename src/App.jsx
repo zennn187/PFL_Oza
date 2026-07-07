@@ -33,6 +33,7 @@ const Checkout = React.lazy(() => import("./pages/member/Checkout"));
 export default function App() {
   const { profile, loading, signOut } = useAuth();
   const authState = profile ? "authenticated" : "guest";
+  const userRole = profile?.role || "guest";
 
   const handleGlobalLogout = async () => {
     await signOut();
@@ -49,10 +50,14 @@ export default function App() {
           <Route 
             path="/" 
             element={
-              authState === "guest" ? (
-                <LandingPage authState={authState} />
+              userRole === "admin" ? (
+                <Navigate to="/dashboard" replace />
               ) : (
-                <Navigate to="/dashboard" />
+                <LandingPage 
+                  authState={authState} 
+                  profile={profile}
+                  onLogout={handleGlobalLogout}
+                />
               )
             } 
           />
@@ -75,7 +80,7 @@ export default function App() {
 
           <Route
             element={
-              <ProtectedRoute allowedRoles={["member", "admin"]}>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <MainLayout onLogout={handleGlobalLogout} />
               </ProtectedRoute>
             }

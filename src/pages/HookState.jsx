@@ -12,6 +12,16 @@ export default function HookState() {
   const [customers, setCustomers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    customerName: '',
+    email: '',
+    phone: '',
+    loyalty: 'Bronze',
+  });
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState('');
 
   const searchInputRef = useRef(null);
 
@@ -37,7 +47,42 @@ export default function HookState() {
     };
 
     fetchCustomers();
-  }, []); 
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitLoading(true);
+    setSubmitError('');
+    setSubmitSuccess('');
+
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .insert([
+          {
+            customerName: formData.customerName,
+            email: formData.email,
+            phone: formData.phone,
+            loyalty: formData.loyalty || 'Bronze',
+          },
+        ])
+        .select();
+
+      if (error) throw error;
+
+      setSubmitSuccess('Customer berhasil ditambahkan!');
+      setFormData({ customerName: '', email: '', phone: '', loyalty: 'Bronze' });
+      setShowForm(false);
+
+      // Refresh data
+      const { data: refreshed } = await supabase.from('customers').select('*');
+      if (refreshed) setCustomers(refreshed);
+    } catch (error) {
+      setSubmitError(error.message || 'Gagal menambahkan customer.');
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
 
   const filteredCustomers = customers.filter(customer =>
     customer && customer.customerName ? customer.customerName.toLowerCase().includes(searchKeyword.toLowerCase()) : false
@@ -57,8 +102,149 @@ export default function HookState() {
   return (
     <div id="hookstate-container" className="p-6 space-y-6 bg-slate-50/50 min-h-screen transition-all duration-500 ease-out animate-in fade-in slide-in-from-bottom-4">
       
-      <PageHeader title="Hook State CRM" />
+      <PageHeader title="Customers" />
       
+      {/* Tombol Tambah Customer */}
+      <div className="flex justify-end">
+        <Button 
+          onClick={() => setShowForm(true)}
+          className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold shadow-sm"
+        >
+          + Tambah Customer
+        </Button>
+      </div>
+
+      {/* Modal Form Tambah Customer */}
+      {showForm && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="bg-white rounded-3xl shadow-2xl w-full max-w-lg border-0">
+            <CardHeader className="pb-4 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-bold text-slate-900">
+                    Tambah Customer
+                  </CardTitle>
+                  <CardDescription className="text-xs text-slate-500 mt-1">
+                    Isi data customer dengan lengkap
+                  </CardDescription>
+                </div>
+                <button
+                  onClick={() => setShowForm(false)}
+                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            </CardHeader>
+
+            <CardContent className="pt-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Nama Lengkap
+                  </label>
+                  <Input
+                    type="text"
+                    required
+                    value={formData.customerName}
+                    onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
+                    placeholder="Masukkan nama lengkap"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Email
+                  </label>
+                  <Input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="contoh@email.com"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Nomor Telepon
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="08xxxxxxxxxx"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">
+                    Level Loyalty
+                  </label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {['Bronze', 'Silver', 'Gold'].map((level) => (
+                      <button
+                        key={level}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, loyalty: level })}
+                        className={`py-3 px-4 rounded-xl border-2 text-center transition-all duration-200 ${
+                          formData.loyalty === level
+                            ? 'border-orange-500 bg-orange-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="text-lg mb-1">
+                          {level === 'Bronze' && '🥉'}
+                          {level === 'Silver' && '🥈'}
+                          {level === 'Gold' && '🥇'}
+                        </div>
+                        <div className={`text-xs font-bold ${
+                          formData.loyalty === level ? 'text-orange-700' : 'text-gray-600'
+                        }`}>
+                          {level} Member
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {submitError && (
+                  <div className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg p-3">
+                    {submitError}
+                  </div>
+                )}
+
+                {submitSuccess && (
+                  <div className="text-xs text-green-700 bg-green-50 border border-green-100 rounded-lg p-3">
+                    {submitSuccess}
+                  </div>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="flex-1 px-6 py-3 border border-gray-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitLoading}
+                    className="flex-1 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-orange-600/20 transition-all disabled:opacity-50"
+                  >
+                    {submitLoading ? 'Menyimpan...' : 'Simpan'}
+                  </button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <Card className="bg-white border border-slate-100 shadow-sm space-y-3 transition-all duration-300 hover:shadow-md hover:border-slate-200/80">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-semibold text-slate-800 flex items-center gap-2">

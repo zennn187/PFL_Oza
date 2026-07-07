@@ -96,10 +96,6 @@ export default function Sidebar() {
           </NavLink>
           <NavLink to="/HookState" className={navLinkClass}>
             <FaDatabase className="text-lg mr-4" />
-            <span className="text-sm font-bold">Hook State</span>
-          </NavLink>
-          <NavLink to="/Customers" className={navLinkClass}>
-            <FaDatabase className="text-lg mr-4" />
             <span className="text-sm font-bold">Customers</span>
           </NavLink>
         </div>

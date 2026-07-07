@@ -13,6 +13,7 @@ import {
 import { useAuth } from "../../context/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 
 const AVAILABLE_VOUCHERS = [
   {
@@ -66,6 +67,12 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const isLoggedIn = Boolean(user?.id);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user_session");
+    if (setAuthState) setAuthState("guest");
+    navigate("/login");
+  };
 
   const guardMemberAction = () => {
     if (isLoggedIn) return true;
@@ -152,10 +159,6 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
     showFeedback("success", `Voucher "${title}" berhasil ditukar!`);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user_session");
-    if (setAuthState) setAuthState("guest");
-  };
 
   const getProgressPercentage = () => {
     // Progress per segment tier:
@@ -175,8 +178,17 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
     return "from-amber-500 to-orange-600";
   };
 
+  const displayName = profile?.nama_lengkap || user?.email?.split("@")[0] || "Member";
+
   return (
     <div className="w-full overflow-y-auto bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] text-[#1E293B] antialiased selection:bg-orange-500 selection:text-white">
+      <Navbar
+        isAuthenticated={isLoggedIn}
+        onLogout={handleLogout}
+        variant={isLoggedIn ? "landing" : "guest"}
+        userName={displayName}
+      />
+
       <AnimatePresence>
         {message.text && (
           <motion.div
@@ -231,7 +243,7 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`relative overflow-hidden rounded-[32px] bg-gradient-to-br ${getTierGradient()} p-8 text-white shadow-xl shadow-orange-900/10`}
+              className={`relative overflow-hidden rounded-[32px] bg-gradient-to-br ${getTierGradient()} p-8 text-white shadow-xl shadow-orange-900/10 border border-white/10`}
             >
               {/* glow */}
               <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
@@ -247,12 +259,20 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
                   </span>
 
                   <div className="mt-2 flex items-center gap-3">
-                    <div className="rounded-2xl bg-white/10 px-4 py-2 ring-1 ring-white/15 backdrop-blur-sm">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-white/70">Member</p>
-                      <h2 className="text-3xl font-black uppercase tracking-wide drop-shadow-sm leading-none">
-                        {tier}
-                      </h2>
-                    </div>
+                      <div className="rounded-2xl bg-white/10 px-4 py-2 ring-1 ring-white/15 backdrop-blur-sm">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-white/70">Member</p>
+                        <h2 className="text-3xl font-black uppercase tracking-wide drop-shadow-sm leading-none">
+                          {tier}
+                        </h2>
+                      </div>
+                      {isLoggedIn && (
+                        <div className="rounded-2xl bg-white/10 px-3 py-2 ring-1 ring-white/15 backdrop-blur-sm">
+                          <p className="text-[10px] font-black uppercase tracking-wider text-white/70">Nama</p>
+                          <p className="text-sm font-bold uppercase tracking-wide leading-none">
+                            {displayName}
+                          </p>
+                        </div>
+                      )}
 
                     <motion.div
                       animate={{ y: [0, -4, 0] }}
@@ -270,6 +290,11 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
                   <p className="mt-1 text-4xl font-black tracking-tight text-yellow-300 drop-shadow-sm">
                     {points} <span className="text-xs font-bold text-white/80">pts</span>
                   </p>
+                  {isLoggedIn && (
+                    <p className="mt-1 text-[11px] font-semibold text-white/70">
+                      {profile?.no_telepon || ''}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -305,6 +330,21 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
                   <strong className="text-white font-bold">Booster Cepat:</strong> transaksi berikutnya dalam <span className="text-yellow-300 font-bold">≤ 3 hari</span> dapat <span className="text-yellow-300 font-bold">2x</span> poin (simulasi).
                 </p>
               </div>
+
+              {isLoggedIn && (
+                <div className="relative z-10 mt-4 flex items-center justify-between rounded-2xl bg-white/10 p-4 text-xs backdrop-blur-md border border-white/10">
+                  <div className="flex items-center gap-2">
+                    <FaCheckCircle className="text-emerald-300" />
+                    <span className="font-semibold text-white/90">Status: Active Member</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="rounded-xl bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/15 hover:bg-white/20 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </motion.section>
 
             <section className="rounded-[32px] border border-slate-100 bg-white p-8 shadow-sm">
@@ -350,9 +390,11 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
                   <FaHistory className="text-orange-500" /> Riwayat Poin
                 </h3>
 
-                <span className="rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-slate-600">
-                  Terbaru
-                </span>
+                {isLoggedIn && (
+                  <span className="rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-orange-700 shadow-sm">
+                    {profile?.role === 'admin' ? 'Admin' : 'Member'}
+                  </span>
+                )}
               </div>
 
               <div className="max-h-52 divide-y divide-slate-100 overflow-y-auto pr-2 scrollbar-thin">
@@ -421,7 +463,7 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full rounded-2xl bg-slate-900 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all hover:bg-black"
+                  className="w-full rounded-2xl bg-gradient-to-r from-[#F97316] to-[#F43F5E] py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-500/15 transition-all hover:shadow-xl hover:shadow-orange-500/20"
                 >
                   Klaim Kode Redeem
                 </motion.button>
@@ -429,9 +471,14 @@ export default function LoyaltyPage({ authState = "guest", setAuthState }) {
             </section>
 
             <section className="rounded-[32px] border border-slate-100 bg-white p-6 shadow-sm">
-              <h3 className="mb-1 flex items-center gap-2 text-base font-bold text-slate-800">
+              <div className="mb-1 flex items-center gap-2 text-base font-bold text-slate-800">
                 <FaTicketAlt className="text-orange-500" /> Tukar Voucher Katering
-              </h3>
+                {isLoggedIn && (
+                  <span className="ml-auto rounded-full border border-orange-200 bg-orange-50 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-orange-700">
+                    {points} Pts
+                  </span>
+                )}
+              </div>
               <p className="mb-6 text-xs font-medium text-slate-400">
                 Gunakan akumulasi poin reward untuk klaim benefit pesanan.
               </p>
