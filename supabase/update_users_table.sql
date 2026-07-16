@@ -9,7 +9,7 @@ ADD COLUMN IF NOT EXISTS role TEXT NOT NULL DEFAULT 'member';
 -- =====================================================
 UPDATE public.users 
 SET role = 'admin' 
-WHERE email = 'email_admin_anda@example.com';
+WHERE email = 'ozaoktagistradaa@gmail.com';
 
 -- =====================================================
 -- QUERY 3: Lihat semua user beserta role-nya

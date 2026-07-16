@@ -96,7 +96,7 @@ export default function Sidebar() {
           </NavLink>
           <NavLink to="/HookState" className={navLinkClass}>
             <FaDatabase className="text-lg mr-4" />
-            <span className="text-sm font-bold">Customers</span>
+            <span className="text-sm font-bold">Manajemen User</span>
           </NavLink>
         </div>
 
@@ -126,14 +126,6 @@ export default function Sidebar() {
                   <div className="w-1.5 h-1.5 rounded-full mr-3 bg-current"></div>
                   <span className="text-sm">Daftar Menu</span>
                 </NavLink>
-                <NavLink to="/kategori-menu" className={subLinkClass}>
-                  <div className="w-1.5 h-1.5 rounded-full mr-3 bg-current"></div>
-                  <span className="text-sm">Kategori Produk</span>
-                </NavLink>
-                <NavLink to="/stok" className={subLinkClass}>
-                  <div className="w-1.5 h-1.5 rounded-full mr-3 bg-current"></div>
-                  <span className="text-sm">Stok Bahan</span>
-                </NavLink>
               </div>
             )}
           </div>
@@ -141,11 +133,6 @@ export default function Sidebar() {
           <NavLink to="/pesanan" className={navLinkClass}>
             <FaClipboardList className="text-lg mr-4" />
             <span className="text-sm font-bold">Daftar Pesanan</span>
-          </NavLink>
-
-          <NavLink to="/pengiriman" className={navLinkClass}>
-            <FaTruck className="text-lg mr-4" />
-            <span className="text-sm font-bold">Status Pengiriman</span>
           </NavLink>
         </div>
 
@@ -158,10 +145,6 @@ export default function Sidebar() {
           <NavLink to="/laporan" className={navLinkClass}>
             <FaChartBar className="text-lg mr-4" />
             <span className="text-sm font-bold">Laporan Keuangan</span>
-          </NavLink>
-          <NavLink to="/ulasan" className={navLinkClass}>
-            <FaStar className="text-lg mr-4" />
-            <span className="text-sm font-bold">Ulasan Pelanggan</span>
           </NavLink>
         </div>
       </div>
