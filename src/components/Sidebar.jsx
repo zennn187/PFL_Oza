@@ -73,10 +73,7 @@ export default function Sidebar() {
             <FaStore className="text-lg mr-4" />
             <span className="text-sm font-bold">Profil Katering</span>
           </NavLink>
-          <NavLink to="/products" className={navLinkClass}>
-            <MdFastfood className="text-xl mr-4" />
-            <span className="text-sm font-bold">Products</span>
-          </NavLink>
+
           <NavLink to="/components" className={navLinkClass}>
             <MdExtension className="text-xl mr-4" />
             <span className="text-sm font-bold">Components</span>
@@ -89,14 +86,6 @@ export default function Sidebar() {
           <NavLink to="/komponen-shadcn" className={navLinkClass}>
             <MdExtension className="text-xl mr-4" />
             <span className="text-sm font-bold">Komponen ShadCN</span>
-          </NavLink>
-          <NavLink to="/data-pelanggan" className={navLinkClass}>
-            <FaDatabase className="text-lg mr-4" />
-            <span className="text-sm font-bold">Data Pelanggan</span>
-          </NavLink>
-          <NavLink to="/HookState" className={navLinkClass}>
-            <FaDatabase className="text-lg mr-4" />
-            <span className="text-sm font-bold">Manajemen User</span>
           </NavLink>
         </div>
 
@@ -142,9 +131,9 @@ export default function Sidebar() {
             <FaUsers className="text-lg mr-4" />
             <span className="text-sm font-bold">Data Pelanggan</span>
           </NavLink>
-          <NavLink to="/laporan" className={navLinkClass}>
-            <FaChartBar className="text-lg mr-4" />
-            <span className="text-sm font-bold">Laporan Keuangan</span>
+          <NavLink to="/HookState" className={navLinkClass}>
+            <FaDatabase className="text-lg mr-4" />
+            <span className="text-sm font-bold">Manajemen User</span>
           </NavLink>
         </div>
       </div>
